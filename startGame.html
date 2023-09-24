@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            margin: 0;
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        .game-box {
+            background-color: #111;
+            color: #ff4444;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin: 0 0 20px;
+        }
+        
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .input-container img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        .start-button {
+            background-color: #ff4444;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .start-button:hover {
+            background-color: #ff3333;
+        }
+        
+    </style>
+    <title>Graveyard Game</title>
+</head>
+<body>
+    <div class="container">
+        <div class="game-box">
+            <h1>Graveyard Game</h1>
+            <div class="input-container">
+                <input type="text" placeholder="Enter your name">
+            </div>
+            <button class="start-button">Start Game</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morse Code Flashlight</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            margin: 0;
+            background: url('pxfuel.jpg') no-repeat center center fixed;
+        }
+
+        #flashlight {
+            position:absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(0, 0, 0,0); /* Flashlight color */
+            border-radius: 50%;
+            opacity: 0.8; /* Adjust the opacity to control the intensity */
+            top: 50%;
+            right: 49%;
+            /*transform: translate(300%, 300%);*/
+        }
+        .container {
+            text-align: center;
+        }
+        
+        .game-box {
+            background-color: #111;
+            color: #ff4444;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin: 0 0 20px;
+        }
+        
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .input-container img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        .start-button {
+            background-color: #ff4444;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .start-button:hover {
+            background-color: #ff3333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-box">
+            <h1>Morse challenge</h1>
+            <div class="input-container">
+                <input type="text" placeholder="Enter ID or name">
+            </div>
+            <button class="start-button">Start Game</button>
+        </div>
+    </div>
+    <div id="flashlight"></div>
+    <script>
+        const flashlight = document.getElementById('flashlight');
+        const morseCode = [0, 0, 0, 1, 1, 1, 0, 0]; // Example Morse code
+
+        function flashMorseCode(code) {
+            let currentIndex = 0;
+
+            function flash() {
+                if (currentIndex < code.length) {
+                    if (code[currentIndex] === 1) {
+                        flashlight.style.boxShadow = '0 0 5px 20px rgba(196, 180, 84, 0.8)'; // Long flash
+                        flashlight.style.backgroundColor="rgb(196, 180, 84)"
+                        setTimeout(() => {
+                            flashlight.style.boxShadow = 'none'; // Turn off the flashlightž
+                            flashlight.style.backgroundColor="rgba(0,0,0,0)"
+                            currentIndex++;
+                            setTimeout(flash, 250); // Pause between long flashes (adjust as needed)
+                        }, 600); // Long flash duration (adjust as needed)
+                    } else {
+                        flashlight.style.boxShadow = '0 0 5px 20px rgba(196, 180, 84, 0.8)'; // Short flash
+                        flashlight.style.backgroundColor="rgb(196, 180, 84)"
+                        setTimeout(() => {
+                            flashlight.style.boxShadow = 'none'; // Turn off the flashlight
+                            flashlight.style.backgroundColor="rgba(0,0,0,0)"
+                            currentIndex++;
+                            setTimeout(flash, 250); // Pause between short flashes (adjust as needed)
+                        }, 200); // Short flash duration (adjust as needed)
+                    }
+                }
+            }
+
+            flash(); // Start flashing Morse code
+        }
+
+        //flashMorseCode(morseCode);
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morse Code Display</title>
+    <style>
+        /* styles.css */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: black;
+    background-image: none;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/*#sun-dot {
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at 60% 40%, rgba(255, 238, 0, 0.7) 10%, transparent 30%);
+    border-radius: 50%;
+    position: relative;
+}*/
+#sun-dot {
+    position: fixed;
+    left: -100%;
+    top: -100%;
+    
+    height: 300%;
+    width: 300%;
+    
+    background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 0.98) 12%); /*comment that to see all screen*/
+    filter: blur(4px);
+  
+    transition: 
+      left .5s ease-in-out,
+      top .5s ease-in-out,
+      height .5s ease-in-out,
+      width .5s ease-in-out;
+  }
+
+
+    </style>
+</head>
+<body>
+    <div class="background" id="back"></div>
+    <div id="sun-dot"></div>
+    <script>
+        // script.js
+const sunDot = document.getElementById('sun-dot');
+const background=document.getElementsByClassName("body");
+const displayButton = document.getElementById('display-button');
+
+// Morse code table: 0 for short, 1 for long
+const morseCodeTable = {
+    0: { duration: 200, gap: 200 }, // Short: 100ms on, 100ms off
+    1: { duration: 500, gap: 200 }, // Long: 300ms on, 100ms off
+};
+
+function displayMorse(data) {
+    let index = 0;
+    function flashNext() {
+        if (index < data.length) {
+            const { duration, gap } = morseCodeTable[data[index]];
+            document.body.style.backgroundImage="url('light.png')"
+            sunDot.style.display = 'block';
+            setTimeout(() => {
+                document.body.style.backgroundImage = "none";
+                setTimeout(() => {
+                    index++;
+                    flashNext();
+                }, gap);
+            }, duration);
+        }
+    }
+
+    flashNext();
+}
+
+displayButton.addEventListener('click', () => {
+    const morseData = [0, 1]; // Replace with your Morse code data
+    displayMorse(morseData);
+});
+
+    </script>
+</body>
+</html>
