@@ -4,6 +4,7 @@ from datetime import datetime
 
 def insertToDatabase(dataIn):
     data=(datetime.now(),dataIn['id'],dataIn['mode'],dataIn['score'],dataIn["total"],dataIn["totalTime"])
+    #print(dataIn["expected"],"   ",dataIn["got"])
     con=sqlite3.connect("/var/www/morse/database.db")
     cur = con.cursor()
     cur.execute("INSERT INTO scores VALUES (?,?,?,?,?,?)",data)

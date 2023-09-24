@@ -55,7 +55,7 @@ function generateChallenge(challengelength) {
   for (let i = 0; i < challengelength; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
     const randomCharacter = characters.charAt(randomIndex);
-    challenge.push(randomCharacter);
+    challenge.push(randomCharacter.toUpperCase());
   }
 
   return challenge
@@ -110,15 +110,36 @@ async function startGame(id, level,challengelength) {
   await new Promise(r => setTimeout(r, 3000));
   let userInput = []
   let startTime = Date.now()
-  function waitForUserInput() {
+  /*function waitForUserInput() {
     return new Promise((resolve) => {
       document.addEventListener('keydown', function handleKey(event) {
-        userInput.push(event.key); // Store user input characters
+        userInput.push(event.key.toUpperCase()); // Store user input characters
         document.removeEventListener('keydown', handleKey); // Remove the event listener
         resolve();
       });
     });
+  }*/
+  function waitForUserInput() {
+    return new Promise((resolve) => {
+      const inputField = document.createElement('input');
+      inputField.type = 'text';
+      inputField.style.position = 'absolute';
+      inputField.style.top="-1000px";
+      inputField.style.left="-1000px";
+      inputField.style.opacity = 0;
+      document.body.appendChild(inputField);
+      //<input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
+  
+      inputField.addEventListener('input', function handleInput(event) {
+        userInput.push(event.target.value.toUpperCase());
+        inputField.removeEventListener('input', handleInput);
+        document.body.removeChild(inputField);
+        resolve();
+      });
+      inputField.focus();
+    });
   }
+  
 
   for (const element of challenge) {
     await new Promise(r => setTimeout(r, 1000));
@@ -143,7 +164,9 @@ async function startGame(id, level,challengelength) {
     "id": id,
     "score": score,
     "total":challengelength,
-    "totalTime": time
+    "totalTime": time,
+    "expected":challenge,
+    "got":userInput
   };
 
   fetch('https://morse.valentincic.eu/api/results', {
