@@ -82,7 +82,7 @@ async function startGame(id,level){
             pause=250
             lLength=600
             sLength=200
-            challengelength=16
+            challengelength=2
             break;
         case "1":
             pause=100
@@ -100,8 +100,9 @@ async function startGame(id,level){
     }
 
     let challenge=await generateChallenge(challengelength)
-    await new Promise(r => setTimeout(r, 4000));
+    await new Promise(r => setTimeout(r, 3000));
     let userInput=[]
+    let startTime=Date.now()
     function waitForUserInput() {
         return new Promise((resolve) => {
           document.addEventListener('keydown', function handleKey(event) {
@@ -113,18 +114,43 @@ async function startGame(id,level){
       }
   
     for (const element of challenge) {
+        await new Promise(r => setTimeout(r, 1000));
         let char = await charToMorseArray(element);
         await flashMorseCode(char, pause, lLength, sLength);
         console.log(char);
         await waitForUserInput();
         console.log(userInput); // Log user input for each element
-        await new Promise(r => setTimeout(r, 1000));
+        
       }
-    
+    let endTime=Date.now()
+    document.getElementById("container2").style.opacity="1"
+    document.getElementById("restart").disabled=false
+    document.body.style.setProperty("cursor","auto")
+    let score=await calculateAnswer(challenge,userInput)
+    let time=(endTime-startTime)/1000
+    document.getElementById("score").innerHTML=score+"/"+challengelength
+    document.getElementById("time").innerHTML=time
     console.log(userInput)
     
 }
 
+async function calculateAnswer(array1, array2) {
+    // Ensure both arrays have the same length
+    if (array1.length !== array2.length) {
+      throw new Error("Arrays must have the same length");
+    }
+  
+    let count = 0;
+  
+    // Iterate through the arrays in parallel and compare elements at the same index
+    for (let i = 0; i < array1.length; i++) {
+      if (array1[i] === array2[i]) {
+        count++;
+      }
+    }
+  
+    return count;
+  }
 
 
 const morseCode = [0, 0, 0, 1, 1, 1, 0, 0,0,1,0,1,0,1,0]; // Example Morse code

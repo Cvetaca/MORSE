@@ -39,6 +39,11 @@ body {
     opacity: 1;
     transition: opacity 0.5s ease;
 }
+#container2 {
+    text-align: center;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
 
 .game-box {
     background-color: #111;
