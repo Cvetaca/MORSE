@@ -7,8 +7,7 @@ body {
     margin: 0;
     background: url('graveyard.jpg') no-repeat center center fixed;
     z-index: -1;
-    cursor: none;
-    caret-color: transparent;
+    
 }
 
 #countdown {
@@ -36,8 +35,11 @@ body {
 }
 #container {
     text-align: center;
-    opacity: 1;
-    transition: opacity 0.5s ease;
+    visibility: visible;
+    position: absolute; /* Added position: absolute; */
+    transition: visibility 0.5s ease;
+    
+
 }
 #container2 {
     text-align: center;

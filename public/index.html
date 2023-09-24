@@ -11,7 +11,9 @@
     <div class="container">
 
     </div>
-    <div id="container">
+    <input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
+
+    <div id="container" class="container">
         <div class="game-box">
             <h1>Morse challenge</h1>
             <div class="input-container">
@@ -26,10 +28,14 @@
                     <option value="2">Champion</option>
                   </select>
             </div>
+            <div class="input-container">
+                
+                <input type="number" id="st" placeholder="Num. of characters">
+            </div>
             <button class="start-button" id="start">Start Game</button>
         </div>
     </div>
-    <div id="container2" style="opacity: 0; transition: opacity 0.5s ease;cursor:none">
+    <div id="container2" style="visibility:hidden; transition: visibility 0.5s ease;">
         <div class="game-box">
             <h1>Score</h1>
                 <p>Correct answers: <span id="score"></span></p>

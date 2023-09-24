@@ -1,0 +1,44 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000;
+    margin: 0;
+    background: url('graveyard.jpg') no-repeat center center fixed;
+    z-index: -1;
+    caret-color: transparent;
+}
+.table-container {
+    width: 70%;
+}
+table {
+    background-color: black;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #ff4444;
+    color: #ff4444;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: black;
+}
+
+tr:nth-child(even) {
+    background-color: rgb(36, 3, 3); /* Darker background for even rows */
+}
+/* Media query for small screens */
+@media screen and (max-width: 600px) {
+    .table-container {
+        overflow-x: auto;
+        width:100%
+    }
+    table {
+        font-size: 12px; /* Reduce font size for small screens */
+    }
+}
