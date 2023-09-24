@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morse Code Challenge</title>
+    <style>
+        body {
+            background-color: black;
+            color: red;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #initial-screen {
+            display: block;
+        }
+        #game-screen {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="initial-screen">
+        <h1>Welcome to the Morse Code Challenge</h1>
+        <label for="playerId">Enter your name or identification number:</label>
+        <input type="text" id="playerId" placeholder="Your Name or ID">
+        <button onclick="startGame()">Start</button>
+    </div>
+
+    <div id="game-screen">
+        <h2>Morse Code Challenge</h2>
+        <p id="character"></p>
+        <input type="text" id="userInput" placeholder="Type your answer">
+        <button onclick="checkAnswer()">Submit</button>
+        <p>Score: <span id="score">0</span></p>
+        <p>Total Time: <span id="totalTime">0</span> seconds</p>
+    </div>
+
+    <script>
+        let playerId;
+        let generatedCharacters = [];
+        let currentCharacterIndex = 0;
+        let score = 0;
+        let startTime;
+
+        function startGame() {
+            playerId = document.getElementById("playerId").value;
+            document.getElementById("initial-screen").style.display = "none";
+            document.getElementById("game-screen").style.display = "block";
+            generateCharacters();
+        }
+
+        function generateCharacters() {
+            // Generate 16 random characters and their Morse code equivalents.
+            for (let i = 0; i < 16; i++) {
+                const randomChar = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+                generatedCharacters.push(randomChar);
+            }
+            displayCharacter();
+        }
+
+        function displayCharacter() {
+            if (currentCharacterIndex < generatedCharacters.length) {
+                const character = generatedCharacters[currentCharacterIndex];
+                document.getElementById("character").textContent = character;
+                startTime = Date.now();
+            } else {
+                endGame();
+            }
+        }
+
+        function checkAnswer() {
+            const userInput = document.getElementById("userInput").value.toUpperCase();
+            const correctCharacter = generatedCharacters[currentCharacterIndex];
+
+            if (userInput === correctCharacter) {
+                score++;
+            }
+
+            currentCharacterIndex++;
+            const elapsedTime = (Date.now() - startTime) / 1000;
+            document.getElementById("score").textContent = score;
+            document.getElementById("totalTime").textContent = elapsedTime.toFixed(2);
+
+            displayCharacter();
+        }
+
+        function endGame() {
+            // Send POST request with player data (this part requires backend implementation).
+            // You can include the necessary data and make an AJAX request to your backend.
+            console.log("Game Over!");
+        }
+    </script>
+</body>
+</html>
