@@ -106,7 +106,6 @@ async function startGame(id, level,challengelength) {
   }
 
   let challenge = await generateChallenge(challengelength)
-  $('#hiddenInput').focus();
   await new Promise(r => setTimeout(r, 3000));
   let userInput = []
   let startTime = Date.now()
