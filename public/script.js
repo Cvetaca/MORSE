@@ -18,7 +18,9 @@ async function startScreen() {
   }
   document.addEventListener("mousemove", getMousePosition);
   document.addEventListener("touchmove", getMousePosition);
+  const checkbox = document.getElementById('competitionMode');
   startButton = document.getElementById("start")
+
 
   startButton.addEventListener("click", async () => {
     if (document.getElementById("ID").value == "") {
@@ -32,19 +34,42 @@ async function startScreen() {
     const level = document.getElementById("level").value
     const id = document.getElementById("ID").value
     const num=document.getElementById("st").value
+    const tmpMode=document.getElementById("modeText").innerHTML
+    let mode;
+    if(tmpMode==="Practice")mode=false
+    else mode=true
     isTransitioning = true;
     flashlightCircle.style.opacity = "0";
     document.getElementById("container").style.visibility="hidden"
+    checkbox.removeEventListener('change',toggle)
+    
     document.body.style.setProperty("cursor", "none")
     document.body.style.setProperty("caret-color", "transparent")
     document.removeEventListener("mousemove", getMousePosition);
     document.removeEventListener("touchmove", getMousePosition);
     startButton.disabled = true; // Disable the button
+    $('.switch').css('opacity','0');
+    $('.slider').css('opacity','0');
     //await new Promise(r => setTimeout(r, 2000));
-    startGame(id, level,num)
+    startGame(id, level,num,mode)
     return
 
   });
+  // Get the checkbox and mode text element
+    const modeText = document.getElementById('modeText');
+    function toggle(){
+      if (this.checked) {
+        modeText.textContent = 'Competition';
+        document.getElementById("st").value=30;
+        document.getElementById("st").disabled=true
+    } else {
+        modeText.textContent = 'Practice';
+        document.getElementById("st").value="";
+        document.getElementById("st").disabled=false
+    }
+    }
+    // Add an event listener to the checkbox
+    checkbox.addEventListener('change', toggle);
   return
 }
 
@@ -61,8 +86,8 @@ function generateChallenge(challengelength) {
   return challenge
 }
 
-async function startGame(id, level,challengelength) {
-
+async function startGame(id, level,challengelength,competitionMode) {
+  //console.log(competitionMode)
   //console.log(id, level)
   var counter = 3;
 
@@ -139,7 +164,6 @@ async function startGame(id, level,challengelength) {
     });
   }
   
-
   for (const element of challenge) {
     await new Promise(r => setTimeout(r, 1000));
     let char = await charToMorseArray(element);
@@ -158,23 +182,54 @@ async function startGame(id, level,challengelength) {
   let time = (endTime - startTime) / 1000
   document.getElementById("score").innerHTML = score + "/" + challengelength
   document.getElementById("time").innerHTML = time
-  const data = {
-    "mode":mode,
-    "id": id,
-    "score": score,
-    "total":challengelength,
-    "totalTime": time,
-    "expected":challenge,
-    "got":userInput
-  };
-
-  fetch('https://morse.valentincic.eu/api/results', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
+  let buff1,buff2
+  buff1=""
+  buff2=""
+  
+  if((score/challengelength)!==1 && competitionMode===false){
+  document.getElementById("difference").innerHTML=`
+  <p>Expected input:</p>
+  <p><span id="expected"></span></p>
+  <p>Received input:</p>
+  <p><span id="received"></span></p>`
+  for(let i = 0; i < challenge.length; i++){
+    if(challenge[i]===userInput[i]){
+      buff1+=challenge[i]
+      buff2+=userInput[i]
+    }else{
+      buff1+=`<span style='color:yellow'>${challenge[i]}</span>`
+      buff2+=`<span style='color:yellow'>${userInput[i]}</span>`
+    }
+    if(i!==challenge.length-1){
+      buff1+=","
+      buff2+=","
+    }
+    //console.log(buff1)
+    document.getElementById("expected").innerHTML=buff1
+    document.getElementById("received").innerHTML=buff2
+  }
+  }
+  if(competitionMode){
+    const data = {
+      "mode":mode,
+      "id": id,
+      "score": score,
+      "total":challengelength,
+      "totalTime": time,
+      "expected":challenge,
+      "got":userInput
+    };
+  
+    fetch('https://morse.valentincic.eu/api/results', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+  }
+  
+  
   //console.log(userInput)
 
 }

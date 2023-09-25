@@ -9,6 +9,7 @@ body {
     z-index: -1;
     caret-color: transparent;
 }
+
 .table-container {
     width: 70%;
 }
@@ -41,4 +42,17 @@ tr:nth-child(even) {
     table {
         font-size: 12px; /* Reduce font size for small screens */
     }
+}
+
+
+.gold {
+    color: gold;
+}
+
+.silver {
+    color: silver;
+}
+
+.bronze {
+    color: #cd7f32; /* Bronze color */
 }

@@ -30,6 +30,13 @@
             </div>
             <div class="input-container">
                 
+                <label class="switch">
+                    <input type="checkbox" id="competitionMode">
+                    <span class="slider"></span>
+                </label>
+                <span id="modeText">Practice</span>
+            </div>
+            <div class="input-container" id="chars">
                 <input type="number" id="st" placeholder="Num. of characters">
             </div>
             <button class="start-button" id="start">Start Game</button>
@@ -40,6 +47,10 @@
             <h1>Score</h1>
                 <p>Correct answers: <span id="score"></span></p>
                 <p>Time: <span id="time"></span>s</p>
+                <span id="difference">
+
+                </span>
+                
             <button class="start-button" id="restart" disabled onclick="window.location.reload();">Restart Game</button>
         </div>
     </div>

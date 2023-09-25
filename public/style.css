@@ -38,8 +38,6 @@ body {
     visibility: visible;
     position: absolute; /* Added position: absolute; */
     transition: visibility 0.5s ease;
-    
-
 }
 #container2 {
     text-align: center;
@@ -119,3 +117,81 @@ input,select {
       rgba(0, 0, 0, 1)
     );
   }
+  
+
+/* Add this CSS to your existing styles */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin-right: 10px;
+    transition: opacity 0.5s ease;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 24px;
+    transition: opacity 0.5s ease;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #ff4444;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+#modeText {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 16px;
+    color: #ff4444;
+    font-weight: bold;
+}
+
+/* Style the text when the slider is checked or unchecked */
+input:checked + .slider + #modeText {
+    color: #33cc33;
+}
+
+/* Style the text when the slider is checked or unchecked */
+input:checked + .slider:before + #modeText {
+    content: "Competition";
+}
+
+/* Style the text when the slider is checked or unchecked */
+input:not(:checked) + .slider:before + #modeText {
+    content: "Practice";
+}
