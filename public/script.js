@@ -29,7 +29,9 @@ async function startScreen() {
     }else if(document.getElementById("st").value==""){
       alert("Enter the number of characters for the game!")
       return
-
+    }else if(document.getElementById("ID").value.length>16){
+      alert("Maximum name length is 16 characters!")
+      return
     }
     const level = document.getElementById("level").value
     const id = document.getElementById("ID").value
