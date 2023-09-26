@@ -117,16 +117,16 @@ async function startGame(id, level,challengelength,competitionMode) {
       break;
     case "1":
       mode="Hard"
-      pause = 100
-      lLength = 400
-      sLength = 100
+      pause = 110
+      lLength = 330
+      sLength = 110
       break;
 
     default:
       mode="Champion"
-      pause = 50
-      lLength = 200
-      sLength = 50
+      pause = 70
+      lLength = 210
+      sLength = 70
       break;
   }
 
