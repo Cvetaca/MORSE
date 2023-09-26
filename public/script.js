@@ -124,9 +124,9 @@ async function startGame(id, level,challengelength,competitionMode) {
 
     default:
       mode="Champion"
-      pause = 70
+      pause = 80
       lLength = 210
-      sLength = 70
+      sLength = 60
       break;
   }
 
@@ -283,31 +283,52 @@ async function charToMorseArray(char) {
 async function flashMorseCode(code, pause, lLength, sLength) {
   let currentIndex = 0;
   const flashlight = document.getElementById('flashlight');
+
   function flash() {
     return new Promise((resolve) => {
       if (currentIndex < code.length) {
         if (code[currentIndex] === 1) {
           flashlight.style.boxShadow = '0 0 5px 20px rgba(196, 180, 84, 0.8)'; // Long flash
-          flashlight.style.backgroundColor = "rgb(196, 180, 84)";
-          setTimeout(() => {
-            flashlight.style.boxShadow = 'none'; // Turn off the flashlight
-            flashlight.style.backgroundColor = "rgba(0,0,0,0)";
-            currentIndex++;
-            setTimeout(() => {
-              flash().then(resolve); // Pause between long flashes (adjust as needed)
-            }, pause);
-          }, lLength); // Long flash duration (adjust as needed)
+          flashlight.style.backgroundColor = 'rgb(196, 180, 84)';
+          const startTime = performance.now();
+
+          function animate() {
+            const currentTime = performance.now();
+            const elapsedTime = currentTime - startTime;
+            if (elapsedTime < lLength) {
+              requestAnimationFrame(animate); // Continue animation
+            } else {
+              flashlight.style.boxShadow = 'none'; // Turn off the flashlight
+              flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+              currentIndex++;
+              setTimeout(() => {
+                flash().then(resolve); // Pause between long flashes (adjust as needed)
+              }, pause);
+            }
+          }
+
+          requestAnimationFrame(animate);
         } else {
           flashlight.style.boxShadow = '0 0 5px 20px rgba(196, 180, 84, 0.8)'; // Short flash
-          flashlight.style.backgroundColor = "rgb(196, 180, 84)";
-          setTimeout(() => {
-            flashlight.style.boxShadow = 'none'; // Turn off the flashlight
-            flashlight.style.backgroundColor = "rgba(0,0,0,0)";
-            currentIndex++;
-            setTimeout(() => {
-              flash().then(resolve); // Pause between short flashes (adjust as needed)
-            }, pause);
-          }, sLength); // Short flash duration (adjust as needed)
+          flashlight.style.backgroundColor = 'rgb(196, 180, 84)';
+          const startTime = performance.now();
+
+          function animate() {
+            const currentTime = performance.now();
+            const elapsedTime = currentTime - startTime;
+            if (elapsedTime < sLength) {
+              requestAnimationFrame(animate); // Continue animation
+            } else {
+              flashlight.style.boxShadow = 'none'; // Turn off the flashlight
+              flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+              currentIndex++;
+              setTimeout(() => {
+                flash().then(resolve); // Pause between short flashes (adjust as needed)
+              }, pause);
+            }
+          }
+
+          requestAnimationFrame(animate);
         }
       } else {
         resolve(); // Resolve the promise when the flashing is done
@@ -315,11 +336,10 @@ async function flashMorseCode(code, pause, lLength, sLength) {
     });
   }
 
-
-  await flash(); // Start flashing Morse code
-  //console.log("END FLASH")
-  return
+  // Start the flashing sequence
+  await flash();
 }
+
 
 $(document).ready(function () {
   startScreen()
