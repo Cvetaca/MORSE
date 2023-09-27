@@ -120,7 +120,7 @@ async function startGame(id, level,challengelength,competitionMode) {
     case "1":
       mode="Hard"
       pause = 110
-      lLength = 330
+      lLength = 340
       sLength = 110
       break;
 
