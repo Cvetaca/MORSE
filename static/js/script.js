@@ -222,7 +222,7 @@ async function startGame(id, level,challengelength,competitionMode) {
       "got":userInput
     };
   
-    fetch('https://morse.valentincic.eu/api/results', {
+    fetch('/api/results', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -255,7 +255,7 @@ async function calculateAnswer(array1, array2) {
 }
 
 
-const morseCode = [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0]; // Example Morse code
+const Code = [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0]; // Example Morse code
 
 async function charToMorseArray(char) {
   const morseCodeMap = {
