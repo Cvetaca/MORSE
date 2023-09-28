@@ -64,11 +64,13 @@ def updateChar(UUID,char):
     with get_database_connection() as con:
         cur = con.cursor()
         response=cur.execute("SELECT response,charIndex,challenge FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        if(response==None):return 2
         getChar=response[0]
         index=response[1]
         challenge=str(response[2]).split(",")
-        ok=False
-        if(challenge[index]==char):ok=True
+        ok=1
+        char=char.upper()
+        if(challenge[index]==char):ok=0
         if(index==0):
                 getChar=getChar+char.upper()
         else:
@@ -82,6 +84,7 @@ def serveChar(UUID):
     with get_database_connection() as con:
         cur = con.cursor()
         response=cur.execute("SELECT challenge,charIndex FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        if(response==None):return None
         challenge=str(response[0]).split(",")
         index=response[1]
         return challenge[index]
@@ -90,6 +93,7 @@ def getResults(UUID):
     with get_database_connection() as con:
         cur = con.cursor()
         response=cur.execute("SELECT challenge,response,rawDate FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        if(response==None):return None
         challenge=str(response[0]).split(",")
         getChar=str(response[1]).split(",")
         rawDate=response[2]
@@ -105,4 +109,4 @@ def destroyEntry(UUID):
     
 
 if __name__ == "__main__":
-    print(updateChar("57761d5b-69d5-4617-bd5c-722409dccd09","v"))
+    print(updateChar("rrr","c"))
