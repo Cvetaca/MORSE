@@ -3,14 +3,26 @@ from gevent.pywsgi import WSGIServer
 import json
 from datetime import datetime
 import database as db
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 import gameMorse
 
 ENV_compLength=30
 
-
+def getIp():
+    return request.headers.get('cf-connecting-ip')
 
 app = Flask(__name__)
+
+limiter = Limiter(
+    app=app,
+    key_func=getIp,
+    storage_uri="memory://",
+    
+)
+
+
 
 
 
@@ -27,30 +39,35 @@ def checkSession(response):
 
 
 @app.route('/static/<path:filename>')
+@limiter.exempt
 def serve_website(filename):
     return send_from_directory('static', filename)
 
 @app.route('/')
+@limiter.exempt
 def serve_root():
     return render_template('index.html')
 
 @app.route('/scores')
+@limiter.exempt
 def scores():
     # Render the HTML file (index.html in this case)
     return render_template('scores.html')
 
 
 @app.route('/api/results', methods=['POST','GET'])
+@limiter.exempt
 def get_general_config():
     if request.method == 'POST':
-        req=request.get_json()
-        db.insertToDatabase(req)
-        return "OK"
+        #req=request.get_json()
+        #db.insertToDatabase(req)
+        return jsonify({"error":"POST TO DATABASE NOT ALLOWED"}),405
     else:
         out=db.getFromDatabase()
         return jsonify(out)
     
 @app.route('/api/game/generateChallenge', methods=['POST'])
+@limiter.limit("200 per day")
 def generateChallenge():
     if request.method == 'POST':
                 try:
@@ -64,6 +81,7 @@ def generateChallenge():
         return jsonify({"error": "Only POST requests are allowed"}), 405
 
 @app.route('/api/game/getChar', methods=['POST'])
+@limiter.exempt
 def getChar():
     if request.method == 'POST':
         if request.is_json:
@@ -83,6 +101,7 @@ def getChar():
         return jsonify({"error": "Only POST requests are allowed"}), 405
 
 @app.route('/api/game/postChar', methods=['POST'])
+@limiter.exempt
 def postChar():
     if request.method == 'POST':
         if request.is_json:
@@ -107,6 +126,7 @@ def postChar():
         return jsonify({"error": "Only POST requests are allowed"}), 405
 
 @app.route('/api/game/getResults', methods=['POST'])
+@limiter.limit("200 per day")
 def getResults():
     if request.method == 'POST':
         if request.is_json:
