@@ -63,17 +63,20 @@ def insertGameStart(sessionID,challenge):
 def updateChar(UUID,char):
     with get_database_connection() as con:
         cur = con.cursor()
-        response=cur.execute("SELECT response,charIndex FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        response=cur.execute("SELECT response,charIndex,challenge FROM gamedata WHERE id = ?", (UUID,)).fetchone()
         getChar=response[0]
         index=response[1]
+        challenge=str(response[2]).split(",")
+        ok=False
+        if(challenge[index]==char):ok=True
         if(index==0):
-                getChar=getChar+char
+                getChar=getChar+char.upper()
         else:
-                getChar=getChar+","+char
+                getChar=getChar+","+char.upper()
         index=index+1
         cur.execute("UPDATE gameData SET response = ?, charIndex = ? WHERE id = ?",(getChar,index,UUID))
         con.commit()
-        return True
+        return ok
 
 def serveChar(UUID):
     with get_database_connection() as con:
@@ -82,6 +85,23 @@ def serveChar(UUID):
         challenge=str(response[0]).split(",")
         index=response[1]
         return challenge[index]
+
+def getResults(UUID):
+    with get_database_connection() as con:
+        cur = con.cursor()
+        response=cur.execute("SELECT challenge,response,rawDate FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        challenge=str(response[0]).split(",")
+        getChar=str(response[1]).split(",")
+        rawDate=response[2]
+        return (challenge,getChar,rawDate)
+    
+def destroyEntry(UUID):
+    #DELETE FROM your_table_name WHERE id = ?
+    with get_database_connection() as con:
+        cur = con.cursor()
+        cur.execute("DELETE FROM gamedata WHERE id = ?", (UUID,))
+        con.commit()
+        return "OK"
     
 
 if __name__ == "__main__":

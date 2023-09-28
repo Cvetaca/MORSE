@@ -70,7 +70,7 @@ def getChar():
                 try:
                     json_data = request.get_json()
                     if(checkSession(json_data)):
-                            return jsonify({"char": db.serveChar(json_data["UUID"])}) 
+                            return jsonify({"char": gameMorse.charToMorseArray(db.serveChar(json_data["UUID"]))}) 
                     else: 
                         return jsonify({"error": "INVALID OR NO UUID!"}), 400
                    
@@ -90,9 +90,9 @@ def postChar():
                     if(checkSession(json_data)):
                         if "char" in json_data.keys():
                             if(db.updateChar(json_data["UUID"],json_data["char"])):
-                                return jsonify({"message":"Char received"})
+                                return jsonify({"message":"OK"})
                             else: 
-                                return jsonify({"error":"Some weird shit"}),400
+                                return jsonify({"message":"NOK"}),400
                         else:
                              return jsonify({"error": "No key provided"}), 400
                     else: 
@@ -112,8 +112,22 @@ def getResults():
                 try:
                     json_data = request.get_json()
                     if(checkSession(json_data)):
-                            
-                        return jsonify({"message": "JSON data received successfully"})
+                        if ("name" in json_data.keys() and "mode" in json_data.keys()):
+                            result=db.getResults(json_data["UUID"])
+                            score=gameMorse.calculateResult(result[0],result[1],result[2])
+                            if(score[0]==-1):return jsonify({"error": "Game not finished yet"}), 400
+                            data={
+                                "id":json_data["name"],
+                                "mode":json_data["mode"],
+                                "score":score[0],
+                                "total":ENV_compLength,
+                                "totalTime":score[1]
+                            }
+                            db.insertToDatabase(data)
+                            db.destroyEntry(json_data["UUID"])
+                            return jsonify({"score":score[0],"time":score[1],"total":ENV_compLength})
+                        else:
+                            return jsonify({"error": "Insuficient data"}), 400
                     else: 
                         return jsonify({"error": "INVALID OR NO UUID!"}), 400
                 except Exception as e:
