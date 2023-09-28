@@ -8,7 +8,7 @@ from flask_limiter.util import get_remote_address
 
 import gameMorse
 
-ENV_compLength=30
+ENV_compLength=5
 
 def getIp():
     return request.headers.get('cf-connecting-ip')
@@ -88,13 +88,15 @@ def getChar():
                 try:
                     json_data = request.get_json()
                     result=db.serveChar(json_data["UUID"])
-                    if(result!=None):
-                        return jsonify({"char": gameMorse.charToMorseArray(result)}) 
+                    if(result==-1):
+                        return jsonify({"error": "End of challenge","END":1})
+                    elif(result!=None):
+                        return jsonify({"char": gameMorse.charToMorseArray(result),"END":0}) 
                     else: 
                         return jsonify({"error": "INVALID OR NO UUID!"}), 400
                    
                 except Exception as e:
-                    return jsonify({"error": "Invalid JSON data"}), 400
+                    return jsonify({"error": "Invalid JSON data","err":str(e)}), 400
         else:
             return jsonify({"error": "Invalid content type, JSON expected"}), 400
     else:
@@ -112,9 +114,11 @@ def postChar():
                             if(response==0):
                                 return jsonify({"message":"OK"})
                             elif(response==1): 
-                                return jsonify({"message":"NOK"}),400
-                            else:
+                                return jsonify({"message":"NOK"})
+                            elif(response==2):
                                 return jsonify({"error": "INVALID OR NO UUID!"}), 400
+                            else:
+                                return jsonify({"error": "End of challenge","END":1}), 418
                     else:
                              return jsonify({"error": "No key provided"}), 400
                    
@@ -138,9 +142,16 @@ def getResults():
                             if(result!=None):
                                 score=gameMorse.calculateResult(result[0],result[1],result[2])
                                 if(score[0]==-1):return jsonify({"error": "Game not finished yet"}), 400
+                                mode=""
+                                if(json_data["mode"]==0):
+                                    mode="Easy"
+                                elif(json_data["mode"]==1):
+                                    mode="Hard"
+                                else:
+                                    mode="Champion"
                                 data={
                                     "id":json_data["name"],
-                                    "mode":json_data["mode"],
+                                    "mode":mode,
                                     "score":score[0],
                                     "total":ENV_compLength,
                                     "totalTime":score[1]

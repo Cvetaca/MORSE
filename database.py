@@ -68,6 +68,7 @@ def updateChar(UUID,char):
         getChar=response[0]
         index=response[1]
         challenge=str(response[2]).split(",")
+        if(index>=len(challenge)): return 3
         ok=1
         char=char.upper()
         if(challenge[index]==char):ok=0
@@ -87,6 +88,7 @@ def serveChar(UUID):
         if(response==None):return None
         challenge=str(response[0]).split(",")
         index=response[1]
+        if(index>=len(challenge)):return -1
         return challenge[index]
 
 def getResults(UUID):
