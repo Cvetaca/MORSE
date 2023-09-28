@@ -105,6 +105,7 @@ input,select {
     transition: opacity 0.5s ease;
   }
   #flashlightCircle:before {
+    z-index: 2;
     content: "";
     display: block;
     width: 100%;
@@ -194,4 +195,48 @@ input:checked + .slider:before + #modeText {
 /* Style the text when the slider is checked or unchecked */
 input:not(:checked) + .slider:before + #modeText {
     content: "Practice";
+}
+
+
+.logo {
+    position: fixed;  /* Makes the logo fixed in the viewport */
+    top: 0;           /* Positions the logo at the top */
+    left: 0;          /* Positions the logo at the left */
+    width: 10%;     /* Adjust the width as needed */
+    opacity: 0.7;
+    z-index: 1;
+  }
+  
+  /* Optional styling for the logo */
+  .logo img {
+    width: 10%;      /* Make sure the image takes the full width of the logo container */
+         /* Make sure the image takes the full height of the logo container */
+    object-fit: cover; /* Adjusts the image size to cover the container */
+    
+  }
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    font-size: 14px;
+    z-index: 1; /* Ensure the footer is above other elements */
+}
+
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        font-size: 11px; /* Reduce font size for small screens */
+    }
+    .footer{
+        font-size: 11px;
+    }
 }

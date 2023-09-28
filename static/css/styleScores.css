@@ -44,6 +44,9 @@ tr:nth-child(even) {
     table {
         font-size: 11px; /* Reduce font size for small screens */
     }
+    .footer{
+        font-size: 11px;
+    }
 }
 
 
@@ -57,4 +60,37 @@ tr:nth-child(even) {
 
 .bronze {
     color: #cd7f32; /* Bronze color */
+}
+
+.logo {
+    position: fixed;  /* Makes the logo fixed in the viewport */
+    top: 0;           /* Positions the logo at the top */
+    left: 0;          /* Positions the logo at the left */
+    width: 10%;     /* Adjust the width as needed */
+       /* Adjust the height as needed */
+    z-index: 1;
+  }
+  
+  /* Optional styling for the logo */
+  .logo img {
+    width: 10%;      /* Make sure the image takes the full width of the logo container */
+         /* Make sure the image takes the full height of the logo container */
+    object-fit: cover; /* Adjusts the image size to cover the container */
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    font-size: 14px;
+    z-index: 1; /* Ensure the footer is above other elements */
+}
+
+
+.footer a {
+    color: white;
+    text-decoration: none;
 }
