@@ -1,5 +1,5 @@
 import sqlite3
-con=sqlite3.connect("/var/www/morseDEV/database.db")
+con=sqlite3.connect("/var/www/morse/database.db")
 cur = con.cursor()
 cur.execute("DROP TABLE IF EXISTS scores")
 con.commit()

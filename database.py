@@ -3,7 +3,7 @@ from contextlib import contextmanager
 from datetime import datetime
 
 # Configuration
-DB_PATH = "/var/www/morseDEV/database.db"
+DB_PATH = "/var/www/morse/database.db"
 
 @contextmanager
 def get_database_connection():
