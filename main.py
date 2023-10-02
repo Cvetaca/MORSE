@@ -8,7 +8,7 @@ from flask_limiter.util import get_remote_address
 
 import gameMorse
 
-ENV_compLength=5
+ENV_compLength=30
 
 def getIp():
     return request.headers.get('cf-connecting-ip')
@@ -175,4 +175,4 @@ if __name__ == '__main__':
     #Development
     #app.run(debug=True,port=6446)
     #print(checkSession({"UUID":"1234"}))
-    serve(6446)
+    serve(5432)
