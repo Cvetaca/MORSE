@@ -42,7 +42,8 @@ async function startScreen() {
     else mode=true
     isTransitioning = true;
     flashlightCircle.style.opacity = "0";
-    document.getElementById("container").style.visibility="hidden"
+    document.getElementById("container").style.opacity=0
+    
     checkbox.removeEventListener('change',toggle)
     
     document.body.style.setProperty("cursor", "none")
@@ -50,9 +51,10 @@ async function startScreen() {
     document.removeEventListener("mousemove", getMousePosition);
     document.removeEventListener("touchmove", getMousePosition);
     startButton.disabled = true; // Disable the button
-    $('.switch').css('opacity','0');
-    $('.slider').css('opacity','0');
+    //$('.switch').css('opacity','0');
+    //$('.slider').css('opacity','0');
     //await new Promise(r => setTimeout(r, 2000));
+    document.getElementById("container").style.visibility="hidden"
     startGame(id, level,num,mode)
     return
 
@@ -109,15 +111,17 @@ async function startGame(id, level,challengelength,competitionMode) {
     counter--;
     if (counter == -1) clearInterval(timer);
   }, 1000);
-  let pause, lLength, sLength,mode
+  let pause, lLength, sLength,mode,intLevel
   switch (level) {
     case "0":
+      intLevel=0
       mode="Easy"
       pause = 250
       lLength = 600
       sLength = 200
       break;
     case "1":
+      intLevel=1
       mode="Hard"
       pause = 110
       lLength = 340
@@ -125,18 +129,23 @@ async function startGame(id, level,challengelength,competitionMode) {
       break;
 
     default:
+      intLevel=2
       mode="Champion"
       pause = 80
       lLength = 210
       sLength = 60
       break;
   }
-
+  if(competitionMode){
+    await new Promise(r => setTimeout(r, 3000));
+    competition(intLevel,id,pause, lLength, sLength)
+    return
+  }
   let challenge = await generateChallenge(challengelength)
   await new Promise(r => setTimeout(r, 3000));
   let userInput = []
   let startTime = Date.now()
-  /*function waitForUserInput() {
+  /*function() {
     return new Promise((resolve) => {
       document.addEventListener('keydown', function handleKey(event) {
         userInput.push(event.key.toUpperCase()); // Store user input characters
@@ -177,7 +186,9 @@ async function startGame(id, level,challengelength,competitionMode) {
   }
   let endTime = Date.now()
   document.getElementById("container2").style.visibility = "visible"
+  document.getElementById("container2").style.opacity = 1
   document.getElementById("restart").disabled = false
+  document.getElementById("scores").disabled = false
   document.body.style.setProperty("cursor", "initial")
     document.body.style.setProperty("caret-color", "white")
   let score = await calculateAnswer(challenge, userInput)
@@ -222,7 +233,7 @@ async function startGame(id, level,challengelength,competitionMode) {
       "got":userInput
     };
   
-    fetch('https://morse.valentincic.eu/api/results', {
+    fetch('/api/results', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -233,6 +244,97 @@ async function startGame(id, level,challengelength,competitionMode) {
   
   
   //console.log(userInput)
+
+}
+function waitForUserInputComp(UUID) {
+  return new Promise((resolve) => {
+    const inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.style.position = 'absolute';
+    inputField.style.top="-1000px";
+    inputField.style.left="-1000px";
+    inputField.style.opacity = 0;
+    document.body.appendChild(inputField);
+    //<input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
+
+    inputField.addEventListener('input',async function handleInput(event) {
+      //userInput.push(event.target.value.toUpperCase());
+      UUID["char"]=event.target.value.toUpperCase()
+      await fetch(`/api/game/postChar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(UUID)
+      })
+      inputField.removeEventListener('input', handleInput);
+      document.body.removeChild(inputField);
+      resolve();
+    });
+    inputField.focus();
+  });
+}
+
+async function competition(mode,name,pause, lLength, sLength){
+  let UUID = await fetch(`/api/game/generateChallenge`,{
+    method:'POST'
+  })
+        .then(response => {
+        if (!response.ok) {
+              throw new Error('Network response was not ok');
+        }
+        return response.json();
+  })
+  let data={
+    "UUID":UUID["UUID"]
+  }
+  await new Promise(r => setTimeout(r, 1000));
+  while (true){
+    //await new Promise(r => setTimeout(r, 1000));
+    let character = await fetch(`/api/game/getChar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+    return response.json();
+    })
+    if(character["END"]==1)break
+    await new Promise(r => setTimeout(r, 1000));
+    character=character["char"]
+    await flashMorseCode(character,pause, lLength, sLength)
+    await waitForUserInputComp(data);
+  }
+  data["mode"]=mode
+  data["name"]=name
+  let results = await fetch(`/api/game/getResults`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+  return response.json();
+  })
+  document.getElementById("container2").style.visibility = "visible"
+  document.getElementById("container2").style.opacity = 1
+  document.getElementById("restart").disabled = false
+  document.getElementById("scores").disabled = false
+  document.body.style.setProperty("cursor", "initial")
+    document.body.style.setProperty("caret-color", "white")
+  let score = results["score"]
+  let time = results["time"]
+  document.getElementById("score").innerHTML = score + "/" + results["total"]
+  document.getElementById("time").innerHTML = time
 
 }
 
@@ -255,7 +357,7 @@ async function calculateAnswer(array1, array2) {
 }
 
 
-const morseCode = [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0]; // Example Morse code
+const Code = [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0]; // Example Morse code
 
 async function charToMorseArray(char) {
   const morseCodeMap = {
