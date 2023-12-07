@@ -145,32 +145,30 @@ async function startGame(id, level,challengelength,competitionMode) {
   await new Promise(r => setTimeout(r, 3000));
   let userInput = []
   let startTime = Date.now()
-  /*function() {
-    return new Promise((resolve) => {
-      document.addEventListener('keydown', function handleKey(event) {
-        userInput.push(event.key.toUpperCase()); // Store user input characters
-        document.removeEventListener('keydown', handleKey); // Remove the event listener
-        resolve();
-      });
-    });
-  }*/
+
   function waitForUserInput() {
     return new Promise((resolve) => {
       const inputField = document.createElement('input');
       inputField.type = 'text';
       inputField.style.position = 'absolute';
-      inputField.style.top="-1000px";
-      inputField.style.left="-1000px";
+      inputField.style.top = "-1000px";
+      inputField.style.left = "-1000px";
       inputField.style.opacity = 0;
       document.body.appendChild(inputField);
-      //<input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
-  
-      inputField.addEventListener('input', function handleInput(event) {
+
+      const handleInput = (event) => {
         userInput.push(event.target.value.toUpperCase());
         inputField.removeEventListener('input', handleInput);
         document.body.removeChild(inputField);
         resolve();
-      });
+      };
+
+      const handleFocus = () => {
+        inputField.focus();
+      };
+
+      inputField.addEventListener('input', handleInput);
+      inputField.addEventListener('blur', handleFocus);
       inputField.focus();
     });
   }
@@ -198,7 +196,7 @@ async function startGame(id, level,challengelength,competitionMode) {
   let buff1,buff2
   buff1=""
   buff2=""
-  
+
   if((score/challengelength)!==1 && competitionMode===false){
   document.getElementById("difference").innerHTML=`
   <p>Expected input:</p>
@@ -257,7 +255,8 @@ function waitForUserInputComp(UUID) {
     document.body.appendChild(inputField);
     //<input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
 
-    inputField.addEventListener('input',async function handleInput(event) {
+
+    const handleInput = async (event) => {
       //userInput.push(event.target.value.toUpperCase());
       UUID["char"]=event.target.value.toUpperCase()
       await fetch(`/api/game/postChar`, {
@@ -267,10 +266,18 @@ function waitForUserInputComp(UUID) {
         },
         body: JSON.stringify(UUID)
       })
+      
       inputField.removeEventListener('input', handleInput);
       document.body.removeChild(inputField);
       resolve();
-    });
+    }
+
+    const handleFocus = () => {
+      inputField.focus();
+    };
+
+    inputField.addEventListener('input', handleInput);
+    inputField.addEventListener('blur', handleFocus);
     inputField.focus();
   });
 }
@@ -289,6 +296,7 @@ async function competition(mode,name,pause, lLength, sLength){
     "UUID":UUID["UUID"]
   }
   await new Promise(r => setTimeout(r, 1000));
+  
   while (true){
     //await new Promise(r => setTimeout(r, 1000));
     let character = await fetch(`/api/game/getChar`, {
@@ -310,6 +318,7 @@ async function competition(mode,name,pause, lLength, sLength){
     await flashMorseCode(character,pause, lLength, sLength)
     await waitForUserInputComp(data);
   }
+  
   data["mode"]=mode
   data["name"]=name
   let results = await fetch(`/api/game/getResults`, {
