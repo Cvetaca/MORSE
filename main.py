@@ -7,6 +7,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 import gameMorse
+from flask import render_template
 
 ENV_compLength=30
 
@@ -31,6 +32,14 @@ def serve(port):
     http_server.serve_forever()
 
 
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+
 def checkSession(response):
     if "UUID" in response.keys():
         return db.checkUUID(response["UUID"])
@@ -48,22 +57,39 @@ def serve_website(filename):
 def serve_root():
     return render_template('index.html')
 
-@app.route('/scores')
+
+@app.route('/dev')
 @limiter.exempt
-def scores():
+def serve_dev():
+    return render_template('index2.html')
+
+#@app.route('/scores')
+#@limiter.exempt
+#def scores():
     # Render the HTML file (index.html in this case)
-    return render_template('scores.html')
+#    return render_template('scores.html')
 
 
-@app.route('/api/results', methods=['POST','GET'])
+@app.route('/scores', defaults={'roomID': '0'})
+@app.route('/scores/<roomID>')
 @limiter.exempt
-def get_general_config():
+def scores(roomID):
+    if db.checkIfRoomExists(roomID):
+        return render_template('scores.html')
+    return render_template('404room.html'), 404
+
+
+
+
+@app.route('/api/results/<roomID>', methods=['POST','GET'])
+@limiter.exempt
+def get_general_config(roomID):
     if request.method == 'POST':
         #req=request.get_json()
         #db.insertToDatabase(req)
         return jsonify({"error":"POST TO DATABASE NOT ALLOWED"}),405
     else:
-        out=db.getFromDatabase()
+        out=db.getFromDatabase(roomID)
         return jsonify(out)
     
 @app.route('/api/game/generateChallenge', methods=['POST'])
@@ -173,6 +199,7 @@ def getResults():
 
 if __name__ == '__main__':
     #Development
-    #app.run(debug=True,port=6446)
+    app.run(debug=True,port=6446)
     #print(checkSession({"UUID":"1234"}))
-    serve(5432)
+    #serve(5432)
+    

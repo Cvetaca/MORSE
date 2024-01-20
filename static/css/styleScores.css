@@ -1,11 +1,13 @@
 body {
     display: flex;
     justify-content: center;
+    font-family: sans-serif;
     align-items: center;
     height: 100vh;
     background-color: #000;
     margin: 0;
     background: url('/static/content/graveyard.jpg') no-repeat center center fixed;
+    background-size: cover;
     z-index: -1;
     caret-color: transparent;
 }

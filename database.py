@@ -3,7 +3,7 @@ from contextlib import contextmanager
 from datetime import datetime
 
 # Configuration
-DB_PATH = "/var/www/morse/database.db"
+DB_PATH = "/var/www/morseDEV/database.db"
 
 @contextmanager
 def get_database_connection():
@@ -36,13 +36,23 @@ def getLastID():
     return out
 
 # Get all data from the database
-def getFromDatabase():
+def getFromDatabase(roomID):
     with get_database_connection() as con:
         cur = con.cursor()
-        cur.execute("SELECT * FROM scores")
+        cur.execute("SELECT * FROM scores WHERE roomID = ?",(roomID,))
         out = cur.fetchall()
 
     return out
+
+def checkIfRoomExists(roomID):
+    with get_database_connection() as con:
+        cur = con.cursor()
+        cur.execute("SELECT EXISTS(SELECT 1 FROM scores WHERE roomID = ?)", (roomID,))
+        exists = cur.fetchone()[0]
+        if exists:
+            return True
+        else:
+            return False
 
 def checkUUID(UUID):
     with get_database_connection() as con:

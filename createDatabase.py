@@ -11,7 +11,8 @@ cur.execute("""CREATE TABLE scores (
             mode nvarchar(10) NOT NULL,
             score int NOT NULL,
             total int NOT NULL,
-            time decimal(10,2) NOT NULL
+            time decimal(10,2) NOT NULL,
+            roomID TEXT DEFAULT '0'
             )""")
 con.commit()
 
@@ -20,7 +21,8 @@ cur.execute("""CREATE TABLE gameData (
             id nvarchar(40) NOT NULL,
             challenge nvarchar(105) NOT NULL,
             response nvarchar(105),
-            charIndex int NOT NULL
+            charIndex int NOT NULL,
+            roomID TEXT DEFAULT '0'
             )""")
 con.commit()
 

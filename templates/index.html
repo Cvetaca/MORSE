@@ -19,14 +19,30 @@
     <img src="/static/content/logoNoBackground.png" alt="Logo" class="logo">
 </head>
 <body>
-    <div class="container">
-
-    </div>
     <input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
-
-    <div id="container" class="container">
+    <div id="container3" class="container3">
+        <div class="game-box"> 
+            <h1>Main menu</h1>
+            <button class="game-button" onclick="changeToPlayWindow()">Play</button><br>
+            <button class="game-button" onclick="window.location.href = '/scores'">Scores</button><br>
+            <button class="game-button" onclick="changeToCreateWindow()">Create room</button><br>
+            <button class="game-button" id="enter">Enter room</button><br>
+            <button class="game-button" id="HTP">How to play</button>
+        </div>
+    </div>
+    <div id="container4" class="container4">
+        <div class="game-box"> 
+            <h1>Create room</h1>
+            <div class="input-container">
+                <input type="text" id="roomName" placeholder="Enter room name">
+            </div>
+            <button class="game-button" onclick="changeToPlayWindow()">Create room</button><br>
+            <span id="roomLink"></p>
+        </div>
+    </div>
+    <div id="container" class="container" >
         <div class="game-box">
-            <h1>Morse challenge</h1>
+            <h1>Game</h1>
             <div class="input-container">
                 <input type="text" id="ID" placeholder="Enter ID or name">
             
@@ -45,7 +61,7 @@
                     <input type="checkbox" id="competitionMode">
                     <span class="slider"></span>
                 </label>
-                <span id="modeText">Practice</span>
+                <span id="modeText">Competition</span>
             </div>
             <div class="input-container" id="chars">
                 <input type="number" id="st" placeholder="Num. of characters">
@@ -53,7 +69,7 @@
             <button class="start-button" id="start">Start Game</button>
         </div>
     </div>
-    <div id="container2" style="visibility:hidden; transition: visibility 0.5s ease;">
+    <div id="container2">
         <div class="game-box">
             <h1>Score</h1>
                 <p>Correct answers: <span id="score"></span></p>

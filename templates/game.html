@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Responsive Design Example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url(graveyard.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas"></canvas>
+
+    <script>
+        window.addEventListener('resize', resizeCanvas, false);
+
+        function resizeCanvas() {
+            var canvas = document.getElementById('myCanvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawPath();
+        }
+
+        function drawPath() {
+            var canvas = document.getElementById('myCanvas');
+            var ctx = canvas.getContext('2d');
+            var hexagonSize = 50;
+            var hexagonSpacing = 20;
+            var pathLength = 20;
+            var startX = (canvas.width - (pathLength * (hexagonSize + hexagonSpacing) - hexagonSpacing)) / 2;
+            var startY = (canvas.height - hexagonSize) / 2;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (var i = 0; i < pathLength; i++) {
+                var x = startX + i * (hexagonSize + hexagonSpacing);
+                var y = startY;
+
+                ctx.beginPath();
+                ctx.moveTo(x + hexagonSize * Math.cos(0), y + hexagonSize * Math.sin(0));
+
+                for (var j = 1; j <= 6; j++) {
+                    ctx.lineTo(x + hexagonSize * Math.cos(j * 2 * Math.PI / 6), y + hexagonSize * Math.sin(j * 2 * Math.PI / 6));
+                }
+
+                ctx.closePath();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(i, x + hexagonSize / 2, y + hexagonSize / 2);
+            }
+
+            for (var k = 0; k < pathLength - 1; k++) {
+                var startX = startX + k * (hexagonSize + hexagonSpacing);
+                var endX = startX + (hexagonSize + hexagonSpacing);
+                var startY = startY + hexagonSize / 2;
+                var endY = startY;
+
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+
+        resizeCanvas();
+    </script>
+</body>
+</html>

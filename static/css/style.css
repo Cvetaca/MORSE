@@ -1,11 +1,12 @@
 body {
     display: flex;
     justify-content: center;
+    font-family: sans-serif;
     align-items: center;
     height: 100vh;
-    background-color: #000;
     margin: 0;
     background: url('/static/content/graveyard.jpg') no-repeat center center fixed;
+    background-size: cover;
     z-index: -1;
     
 }
@@ -22,7 +23,9 @@ body {
     color: #ff4444; 
   }
 
+
 #flashlight {
+    visibility: hidden;
     position:absolute;
     width: 20px;
     height: 20px;
@@ -31,20 +34,43 @@ body {
     opacity: 0.8; /* Adjust the opacity to control the intensity */
     top: 50%;
     right: 50%;
+    /*transition: opacity 0.5s ease;*/
     /*transform: translate(300%, 300%);*/
 }
-#container {
+
+.container3 {
     text-align: center;
     visibility: visible;
     opacity: 1;
     position: absolute; /* Added position: absolute; */
-    transition: opacity 0.5s ease;
+    transition: opacity 1s ease;
+}
+
+.container4 {
+    text-align: center;
+    visibility: hidden;
+    pointer-events: none; 
+    opacity: 0;
+    position: absolute; /* Added position: absolute; */
+    transition: opacity 1s ease;
+
+}
+
+
+#container {
+    text-align: center;
+    visibility: hidden;
+    pointer-events: none; 
+    opacity: 0;
+    position: absolute; /* Added position: absolute; */
+    transition: opacity 1s ease;
 }
 #container2 {
     text-align: center;
     visibility: hidden;
+    pointer-events: none; 
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 1s ease;
 }
 
 .game-box {
@@ -92,34 +118,75 @@ input,select {
     font-size: 18px;
     transition: background-color 0.3s ease;
 }
+.game-button {
+    background-color: #ff4444;
+    color: #fff;
+    padding: 10px 20px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px; /* Add margin-bottom to create space at the bottom */
+}
+
+.game-button:hover {
+    background-color: #10362B;
+}
 
 .start-button:hover {
-    background-color: #ff3333;
+    background-color: #10362B;
 }
 
 
 #flashlightCircle {
+    visibility: hidden;
     --Xpos: 50vw;
     --Ypos: 50vh;
-    opacity: 1;
+    opacity: 0;
+    z-index: 2;
     transition: opacity 0.5s ease;
-  }
-  #flashlightCircle:before {
+    
+}
+
+#flashlightCircle:before {
     z-index: 2;
     content: "";
     display: block;
     width: 100%;
     height: 100%;
-    top:0%;
+    top: 0%;
     left: 0%;
-    position:absolute;
+    position: absolute;
     pointer-events: none;
     background: radial-gradient(
-      circle 15em at var(--Xpos) var(--Ypos),
-      rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 1)
+        circle 15em at var(--Xpos) var(--Ypos),
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 1)
     );
-  }
+}
+
+/* Add animation to gradually increase opacity */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+
   
 
 /* Add this CSS to your existing styles */

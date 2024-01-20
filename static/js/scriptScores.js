@@ -53,7 +53,7 @@ async function visualisation(resData) {
   }
 
 async function showData(){
-    let data = await fetch(`/api/results`)
+    let data = await fetch(`/api/results/0`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
