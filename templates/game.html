@@ -1,85 +1,326 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Responsive Design Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morse challenge - Learn</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--<link rel="stylesheet" href="/static/css/styleGame.css">-->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="manifest" href="/static/favicon/site.webmanifest">
+    <link rel="mask-icon" href="/static/favicon/safari-pinned-tab.svg" color="#ff4444">
+    <meta name="apple-mobile-web-app-title" content="Morse Challenge">
+    <meta name="application-name" content="Morse Challenge">
+    <meta name="msapplication-TileColor" content="#ff4444">
+    <meta name="theme-color" content="#ff4444">
+    <img src="/static/content/logoNoBackground.png" alt="Logo" class="logo">
+
     <style>
         body {
+            display: flex;
+            justify-content: center;
+            font-family: sans-serif;
+            align-items: center;
+            padding-left: 5%;
+            padding-right: 5%;
+            height: 100vh;
             margin: 0;
-            padding: 0;
-            background-image: url(graveyard.jpg);
+            background: url('/static/content/graveyard.jpg') no-repeat center center fixed;
             background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
+            z-index: -1;
+        }
+        
+        .scrolling-wrapper {
+            overflow-x: hidden;
+            overflow-y: hidden;
+            white-space: nowrap;
+            scroll-behavior: smooth;
+        }
+        
+        .card {
+            display: inline-block;
+            scroll-snap-align: center;
+            color: white;
+            width: 20%;
+            height: 95%;
+            border: red 2px solid;
+            background: black;
+            margin-right: 2.5%;
+            margin-left: 2.5%;
+            word-break: break-word;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
         }
 
-        canvas {
-            display: block;
+   
+        
+        .card h2 {
+            text-align: center;
         }
+
+        
+        .cardDEAD {
+            display: inline-block;
+            color:white;
+            scroll-snap-align: center;
+            border: 2px solid red;
+            width: 20%;
+            height: 100%;
+            opacity: 0;
+            margin-right: 10px;
+        }
+      
+        
+        .scrolling-wrapper, .scrolling-wrapper-flexbox {
+            height: 50%;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+        
+        
+        .logo {
+            position: fixed;  /* Makes the logo fixed in the viewport */
+            top: 0;           /* Positions the logo at the top */
+            left: 0;          /* Positions the logo at the left */
+            width: 10%;     /* Adjust the width as needed */
+               /* Adjust the height as needed */
+            z-index: 1;
+          }
+          
+          /* Optional styling for the logo */
+          .logo img {
+            width: 10%;      /* Make sure the image takes the full width of the logo container */
+                 /* Make sure the image takes the full height of the logo container */
+            object-fit: cover; /* Adjusts the image size to cover the container */
+          }
+        
+        .scroll-buttons {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+       
+        
+        .buttonLeft {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            z-index: 1;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            left: 2px;
+        }
+        .buttonRight {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            z-index: 1;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            right: 2px;
+        }
+        
+        .scroll-buttons button.right {
+            right: 2px;
+        }
+        
+        /* Media query for computers */
+        @media only screen and (max-width: 1024px) {
+            .card {
+                width: 20%;
+            }
+            .cardDEAD {
+                width: 20%;
+            }
+        }
+        
+        /* Media query for mobile phones */
+        @media only screen and (max-width: 480px) {
+            .card {
+                width: 60%;
+            }
+            .cardDEAD {
+                width: 60%;
+            }
+        }
+        
     </style>
 </head>
+<style>
+    .center-dot {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        background-color: white;
+        border-radius: 50%;
+        z-index: 9999;
+    }
+</style>
+<div class="center-dot"></div>
 <body>
-    <canvas id="myCanvas"></canvas>
-
+    
+    <div class="scrolling-wrapper">
+        <div class="cardDEAD"><h2>Card x</h2></div>
+        <div class="cardDEAD"><h2>Card x</h2></div>
+        <div class="cardDEAD"><h2>Card x</h2></div>
+        <div class="card">
+            <h2>Level 1</h2>
+        </div>
+        <div class="card">
+            <h2>Level 2</h2>
+        </div>
+        <div class="card">
+            <h2>Level 3</h2>
+        </div>
+        <div class="card">
+            <h2>Level 4</h2>
+        </div>
+        <div class="card">
+            <h2>Level 5</h2>
+        </div>
+        <div class="card">
+            <h2>Level 6</h2>
+        </div>
+        <div class="card">
+            <h2>Level 7</h2>
+        </div>
+        <div class="card">
+            <h2>Level 8</h2>
+        </div>
+        <div class="card">
+            <h2>Level 9</h2>
+        </div>
+        <div class="card">
+            <h2>Level 10</h2>
+        </div>
+        <div class="card">
+            <h2>Level 11</h2>
+        </div>
+        <div class="card">
+            <h2>Level 12</h2>
+        </div>
+        <div class="card">
+            <h2>Level 13</h2>
+        </div>
+        <div class="card">
+            <h2>Level 14</h2>
+        </div>
+        <div class="card">
+            <h2>Level 15</h2>
+        </div>
+        <div class="cardDEAD"><h2>Card x</h2></div>
+        <div class="cardDEAD"><h2>Card x</h2></div>
+        <div class="cardDEAD"><h2>Card x</h2></div>
+    </div>
+    
+        <button onclick="scrollToLeft()" class="buttonLeft" id="scrollLeftButton"><i class="fa fa-arrow-left"></i></button>
+        <button onclick="scrollToRight()" class="buttonRight" id="scrollRightButton"><i class="fa fa-arrow-right"></i></button>
+    
     <script>
-        window.addEventListener('resize', resizeCanvas, false);
-
-        function resizeCanvas() {
-            var canvas = document.getElementById('myCanvas');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            drawPath();
+        const scrollingWrapper = document.querySelector('.scrolling-wrapper');
+        const cards = document.querySelectorAll('.card');
+        const cardWidth = cards[0].offsetWidth;
+        const scrollAmount = cardWidth+(window.innerWidth * 0.05); // 3px margin-right
+        
+        function scrollToLeft() {
+            const cardIndex = getCardIndexInMiddle();
+            console.log(cardIndex);
+            if (cardIndex !== 0) {
+                const card = cards[cardIndex - 1];
+                const cardPosition = card.offsetLeft - (scrollingWrapper.offsetWidth / 2) + (card.offsetWidth / 2);
+                //scrollingWrapper.scrollTo({ left: cardPosition, behavior: 'smooth' });
+                card.scrollIntoView({ behavior: 'smooth', inline: 'center' ,block: 'center'});
+            }
         }
 
-        function drawPath() {
-            var canvas = document.getElementById('myCanvas');
-            var ctx = canvas.getContext('2d');
-            var hexagonSize = 50;
-            var hexagonSpacing = 20;
-            var pathLength = 20;
-            var startX = (canvas.width - (pathLength * (hexagonSize + hexagonSpacing) - hexagonSpacing)) / 2;
-            var startY = (canvas.height - hexagonSize) / 2;
+        function scrollToRight() {
+            const cardIndex = getCardIndexInMiddle();
+            console.log(cardIndex);
+            if (cardIndex !== cards.length - 1) {
+                const card = cards[cardIndex + 1];
+                const cardPosition = card.offsetLeft - (scrollingWrapper.offsetWidth / 2) + (card.offsetWidth / 2);
+                card.scrollIntoView({ behavior: 'smooth', inline: 'center' ,block: 'center'});
+                //scrollingWrapper.scrollTo({ left: cardPosition, behavior: 'smooth' });
+                //card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+        
+        function scrollToCard(cardNumber) {
+            //const cardNumber = document.getElementById('cardNumber').value;
+            const cardIndex = parseInt(cardNumber)-1;
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (var i = 0; i < pathLength; i++) {
-                var x = startX + i * (hexagonSize + hexagonSpacing);
-                var y = startY;
-
-                ctx.beginPath();
-                ctx.moveTo(x + hexagonSize * Math.cos(0), y + hexagonSize * Math.sin(0));
-
-                for (var j = 1; j <= 6; j++) {
-                    ctx.lineTo(x + hexagonSize * Math.cos(j * 2 * Math.PI / 6), y + hexagonSize * Math.sin(j * 2 * Math.PI / 6));
+            if (cardIndex >= 0 && cardIndex < cards.length) {
+                const card = cards[cardIndex];
+                const cardPosition = card.offsetLeft - (scrollingWrapper.offsetWidth / 2) + (card.offsetWidth / 2);
+                card.scrollIntoView({ behavior: 'smooth', inline: 'center' ,block: 'center'});
+                //card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                 // Adjust the delay as needed
+            }
+        }
+        function getCardIndexInMiddle() {
+            const scrollingWrapperRect = scrollingWrapper.getBoundingClientRect();
+            const middleX = scrollingWrapperRect.left + scrollingWrapperRect.width / 2;
+            
+            let cardIndex = -1;
+            cards.forEach((card, index) => {
+                const cardRect = card.getBoundingClientRect();
+                if (cardRect.left <= middleX && cardRect.right >= middleX) {
+                    cardIndex = index;
                 }
-
-                ctx.closePath();
-                ctx.strokeStyle = 'white';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                ctx.fillStyle = 'white';
-                ctx.font = '12px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(i, x + hexagonSize / 2, y + hexagonSize / 2);
+            });
+            
+            return cardIndex;
+        }
+        
+        // Disable scrolling buttons when last card is in the middle
+        function updateScrollButtons() {
+            const cardIndex = getCardIndexInMiddle();
+            const scrollLeftButton = document.getElementById('scrollLeftButton');
+            const scrollRightButton = document.getElementById('scrollRightButton');
+            
+            if (cardIndex === 0) {
+                scrollLeftButton.disabled = true;
+            } else {
+                scrollLeftButton.disabled = false;
             }
-
-            for (var k = 0; k < pathLength - 1; k++) {
-                var startX = startX + k * (hexagonSize + hexagonSpacing);
-                var endX = startX + (hexagonSize + hexagonSpacing);
-                var startY = startY + hexagonSize / 2;
-                var endY = startY;
-
-                ctx.beginPath();
-                ctx.moveTo(startX, startY);
-                ctx.lineTo(endX, endY);
-                ctx.strokeStyle = 'white';
-                ctx.lineWidth = 2;
-                ctx.stroke();
+            
+            if (cardIndex === cards.length - 1) {
+                scrollRightButton.disabled = true;
+            } else {
+                scrollRightButton.disabled = false;
             }
         }
-
-        resizeCanvas();
+        
+        // Initial update of scroll buttons
+        updateScrollButtons();
+        
+        // Scroll to Card 1 on page load
+        window.addEventListener('load', function() {
+            const card = cards[0];
+            console.log(card.offsetLeft, scrollingWrapper.offsetWidth, card.offsetWidth)
+            card.scrollIntoView({ behavior: 'smooth', inline: 'center' ,block: 'center'});
+        });
+        
+        // Update scroll buttons on scroll
+        scrollingWrapper.addEventListener('scroll', updateScrollButtons);
+        
     </script>
 </body>
 </html>

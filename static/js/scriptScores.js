@@ -61,11 +61,13 @@ async function showData(){
                     return response.json();
                 })
     //console.log(data)
-    await visualisation(data)
-    return
+    //await visualisation(data)
+    return data
 }
 
-$(document).ready(function () {
-    showData()
-  
+let dataGlobal = showData()
+
+$(document).ready(async function () {
+    //showData()
+    visualisation(await dataGlobal)
   });

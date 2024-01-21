@@ -61,13 +61,24 @@ def serve_root():
 @app.route('/dev')
 @limiter.exempt
 def serve_dev():
-    return render_template('index2.html')
+    return render_template('game.html')
 
 #@app.route('/scores')
 #@limiter.exempt
 #def scores():
     # Render the HTML file (index.html in this case)
 #    return render_template('scores.html')
+
+
+
+@app.route('/api/checkRoomExists/<roomID>', methods=['GET'])
+@limiter.exempt
+def check_room_exists(roomID):
+    if db.checkIfRoomExists(roomID):
+        return jsonify({"exists": True})
+    else:
+        return jsonify({"exists": False})
+
 
 
 @app.route('/scores', defaults={'roomID': '0'})

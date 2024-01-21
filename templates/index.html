@@ -10,6 +10,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="manifest" href="/static/favicon/site.webmanifest">
     <link rel="mask-icon" href="/static/favicon/safari-pinned-tab.svg" color="#ff4444">
     <meta name="apple-mobile-web-app-title" content="Morse Challenge">
@@ -20,18 +21,22 @@
 </head>
 <body>
     <input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
-    <div id="container3" class="container3">
+    <div id="container3" class="container">
+        
         <div class="game-box"> 
             <h1>Main menu</h1>
             <button class="game-button" onclick="changeToPlayWindow()">Play</button><br>
             <button class="game-button" onclick="window.location.href = '/scores'">Scores</button><br>
             <button class="game-button" onclick="changeToCreateWindow()">Create room</button><br>
-            <button class="game-button" id="enter">Enter room</button><br>
+            <button class="game-button" onclick="changeToEnterWindow()">Enter room</button><br>
             <button class="game-button" id="HTP">How to play</button>
         </div>
     </div>
-    <div id="container4" class="container4">
+
+    
+    <div id="container4" class="containerHidden">
         <div class="game-box"> 
+            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromCreateToMain()"></i>
             <h1>Create room</h1>
             <div class="input-container">
                 <input type="text" id="roomName" placeholder="Enter room name">
@@ -40,8 +45,19 @@
             <span id="roomLink"></p>
         </div>
     </div>
-    <div id="container" class="container" >
+    <div id="container5" class="containerHidden">
+        <div class="game-box"> 
+            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromEnterToMain()"></i>
+            <h1>Enter room</h1>
+            <div class="input-container">
+                <input type="text" id="roomName" placeholder="Enter room ID">
+            </div>
+            <button class="game-button" onclick="changeToPlayWindow()">Enter room</button><br>
+        </div>
+    </div>
+    <div id="container" class="containerHidden" >
         <div class="game-box">
+            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromGameToMain()"></i>
             <h1>Game</h1>
             <div class="input-container">
                 <input type="text" id="ID" placeholder="Enter ID or name">
@@ -58,7 +74,7 @@
             <div class="input-container">
                 
                 <label class="switch">
-                    <input type="checkbox" id="competitionMode">
+                    <input type="checkbox" id="competitionMode" onchange="toggle()">
                     <span class="slider"></span>
                 </label>
                 <span id="modeText">Competition</span>
@@ -66,11 +82,12 @@
             <div class="input-container" id="chars">
                 <input type="number" id="st" placeholder="Num. of characters">
             </div>
-            <button class="start-button" id="start">Start Game</button>
+            <button class="start-button" id="start" onclick="startButtonGame()">Start Game</button>
         </div>
     </div>
-    <div id="container2">
+    <div id="container2" class="containerHidden">
         <div class="game-box">
+            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="location.reload();"></i>
             <h1>Score</h1>
                 <p>Correct answers: <span id="score"></span></p>
                 <p>Time: <span id="time"></span>s</p>

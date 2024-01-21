@@ -30,16 +30,69 @@ async function startScreen() {
 
 
 
+async function startButtonGame(){
+  if (document.getElementById("ID").value == "") {
+    alert("Enter name or ID!")
+    return
+  }else if(document.getElementById("st").value==""){
+    alert("Enter the number of characters for the game!")
+    return
+  }else if(document.getElementById("ID").value.length>16){
+    alert("Maximum name length is 16 characters!")
+    return
+  }
+  const checkbox = document.getElementById("competitionMode");
+  const level = document.getElementById("level").value
+  const id = document.getElementById("ID").value
+  const num=document.getElementById("st").value
+  let mode;
+  mode=checkbox.checked
+  hideGameWindow()
+  
+  document.body.style.setProperty("cursor", "none")
+  document.body.style.setProperty("caret-color", "transparent")
+
+  document.removeEventListener("mousemove", getMousePosition);
+  document.removeEventListener("touchmove", getMousePosition);
+  startGame(id, level,num,mode)
+  return;
+}
+
+
+function hideGameWindow(){
+  const container = document.getElementById("container");
+
+  container.style.transition = "visibility 1s, opacity 1s";
+  container.style.visibility = "hidden";
+  container.style.opacity = 0;
+  container.style.pointerEvents = "none";
+  const flashlightCircle = document.getElementById("flashlightCircle");
+  flashlightCircle.style.visibility = "hidden";
+  flashlightCircle.style.animation = "fadeOut 1s ease forwards";
+  return
+}
+
+function toggle(){
+  var checkbox = document.getElementById("competitionMode");
+  if (checkbox.checked) {
+    document.getElementById("st").value=30;
+    document.getElementById("st").disabled=true
+} else {
+    document.getElementById("st").value="";
+    document.getElementById("st").disabled=false
+}
+}
+
 function changeToPlayWindow(){
   const container3 = document.getElementById("container3");
   const container = document.getElementById("container");
 
-  container3.style.transition = "visibility 1s, opacity 1s";
+  //container3.style.transition = "visibility 1s, opacity 1s";
   container3.style.visibility = "hidden";
   container3.style.opacity = 0;
   container3.style.pointerEvents = "none";
 
-  container.style.transition = "visibility 1s, opacity 1s";
+  //container.style.transition = "visibility 1s, opacity 1s";
   container.style.visibility = "visible";
   container.style.opacity = 1;
   container.style.pointerEvents = "auto";
@@ -49,86 +102,95 @@ function changeToPlayWindow(){
   flashlightCircle.style.visibility = "visible";
   flashlightCircle.style.animation = "fadeIn 1s ease forwards";
   flashlight.style.visibility = "visible";
-
-  const checkbox = document.getElementById('competitionMode');
-  
-  // Get the checkbox and mode text element
-    const modeText = document.getElementById('modeText');
-    function toggle(){
-      if (this.checked) {
-        document.getElementById("st").value=30;
-        document.getElementById("st").disabled=true
-    } else {
-        document.getElementById("st").value="";
-        document.getElementById("st").disabled=false
-    }
-    }
-    // Add an event listener to the checkbox
-    checkbox.addEventListener('change', toggle);
-
-
-  startButton = document.getElementById("start")
-
-
-  startButton.addEventListener("click", async () => {
-    if (document.getElementById("ID").value == "") {
-      alert("Enter name or ID!")
-      return
-    }else if(document.getElementById("st").value==""){
-      alert("Enter the number of characters for the game!")
-      return
-    }else if(document.getElementById("ID").value.length>16){
-      alert("Maximum name length is 16 characters!")
-      return
-    }
-    const level = document.getElementById("level").value
-    const id = document.getElementById("ID").value
-    const num=document.getElementById("st").value
-    let mode;
-    let flashlightCircle = document.getElementById("flashlightCircle");
-    mode=checkbox.checked
-    isTransitioning = true;
-    console.log("here")
-    flashlightCircle.style.opacity = "0";
-    console.log("here2")
-    console.log(flashlightCircle.style.opacity)
-    
-    flashlightCircle.style.animation = "fadeOut 1s ease forwards";
-    //flashlightCircle.style.visibility = "hidden";
-    document.getElementById("container").style.opacity=0
-    
-    checkbox.removeEventListener('change',toggle)
-    
-    document.body.style.setProperty("cursor", "none")
-    document.body.style.setProperty("caret-color", "transparent")
-
-    document.removeEventListener("mousemove", getMousePosition);
-    document.removeEventListener("touchmove", getMousePosition);
-    startButton.disabled = true; // Disable the button
-    //$('.switch').css('opacity','0');
-    //$('.slider').css('opacity','0');
-    //await new Promise(r => setTimeout(r, 2000));
-    document.getElementById("container").style.visibility="hidden"
-    startGame(id, level,num,mode)
-    return;
-  });
 }
 
 function changeToCreateWindow(){
   const container3 = document.getElementById("container3");
   const container4 = document.getElementById("container4");
 
-  container3.style.transition = "opacity 1s";
+  //container3.style.transition = "opacity 1s";
   container3.style.opacity = 0;
   container3.style.visibility = "hidden";
   container3.style.pointerEvents = "none";
   
 
-  container4.style.transition = "opacity 1s";
+  //container4.style.transition = "opacity 1s";
   container4.style.visibility = "visible";
   container4.style.opacity = 1;
   container4.style.pointerEvents = "auto";
+}
+function changeToEnterWindow(){
+  const container3 = document.getElementById("container3");
+  const container5 = document.getElementById("container5");
 
+  //container3.style.transition = "opacity 1s";
+  container3.style.opacity = 0;
+  container3.style.visibility = "hidden";
+  container3.style.pointerEvents = "none";
+  
+
+  //container4.style.transition = "opacity 1s";
+  container5.style.visibility = "visible";
+  container5.style.opacity = 1;
+  container5.style.pointerEvents = "auto";
+}
+
+function changeFromCreateToMain(){
+  const container3 = document.getElementById("container3");
+  const container4 = document.getElementById("container4");
+
+  //container4.style.transition = "opacity 1s";
+  container4.style.opacity = 0;
+  container4.style.visibility = "hidden";
+  container4.style.pointerEvents = "none";
+  
+
+  //container3.style.transition = "opacity 1s";
+  container3.style.visibility = "visible";
+  container3.style.opacity = 1;
+  container3.style.pointerEvents = "auto";
+
+}
+
+function changeFromGameToMain(){
+  const container3 = document.getElementById("container3");
+  const container = document.getElementById("container");
+
+  container.style.visibility = "hidden";
+  container.style.opacity = 0;
+  
+  container.style.pointerEvents = "none";
+  
+
+  container3.style.visibility = "visible";
+  container3.style.opacity = 1;
+  container3.style.pointerEvents = "auto";
+  const flashlightCircle = document.getElementById("flashlightCircle");
+  const flashlight = document.getElementById("flashlight");
+  flashlightCircle.style.animation = "fadeOut 1s ease forwards";
+  flashlightCircle.style.visibility = "hidden";
+  flashlight.style.visibility = "hidden";
+
+}
+function changeFromEnterToMain(){
+  const container3 = document.getElementById("container3");
+  const container5 = document.getElementById("container5");
+
+  //container4.style.transition = "opacity 1s";
+  container5.style.opacity = 0;
+  container5.style.visibility = "hidden";
+  container5.style.pointerEvents = "none";
+  
+
+  //container3.style.transition = "opacity 1s";
+  container3.style.visibility = "visible";
+  container3.style.opacity = 1;
+  container3.style.pointerEvents = "auto";
+}
+
+
+function createRoom(){
+  return
 }
   
 

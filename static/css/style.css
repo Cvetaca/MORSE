@@ -38,7 +38,7 @@ body {
     /*transform: translate(300%, 300%);*/
 }
 
-.container3 {
+.container {
     text-align: center;
     visibility: visible;
     opacity: 1;
@@ -46,32 +46,15 @@ body {
     transition: opacity 1s ease;
 }
 
-.container4 {
+.containerHidden {
     text-align: center;
     visibility: hidden;
     pointer-events: none; 
     opacity: 0;
     position: absolute; /* Added position: absolute; */
-    transition: opacity 1s ease;
-
+    transition: visibility 1s, opacity 1s ease;
 }
 
-
-#container {
-    text-align: center;
-    visibility: hidden;
-    pointer-events: none; 
-    opacity: 0;
-    position: absolute; /* Added position: absolute; */
-    transition: opacity 1s ease;
-}
-#container2 {
-    text-align: center;
-    visibility: hidden;
-    pointer-events: none; 
-    opacity: 0;
-    transition: opacity 1s ease;
-}
 
 .game-box {
     background-color: #111;
@@ -146,7 +129,7 @@ input,select {
     --Ypos: 50vh;
     opacity: 0;
     z-index: 2;
-    transition: opacity 0.5s ease;
+    transition: visibility 1s, opacity 0.5s ease;
     
 }
 

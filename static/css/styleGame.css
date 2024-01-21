@@ -1,0 +1,75 @@
+body {
+    display: flex;
+    justify-content: center;
+    font-family: sans-serif;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: url('/static/content/graveyard.jpg') no-repeat center center fixed;
+    background-size: cover;
+    z-index: -1;
+}
+
+.scrolling-wrapper {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+}
+
+.card {
+    display: inline-block;
+    scroll-snap-align: center;
+    border: 2px solid red;
+    color:white;
+    width: 300px;
+    height: 250px;
+    background: black;
+}
+.cardDEAD {
+    display: inline-block;
+    color:white;
+    scroll-snap-align: center;
+    border: 2px solid red;
+    width: 300px;
+    height: 250px;
+    opacity: 0;
+    background: black;
+}
+.cardDEADend {
+    display: inline-block;
+    color:white;
+    scroll-snap-align: center;
+    border: 2px solid red;
+    width: 150px;
+    height: 250px;
+    opacity: 0;
+    background: black;
+}
+
+.scrolling-wrapper, .scrolling-wrapper-flexbox {
+    height: 250px;
+    margin-bottom: 20px;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+
+.logo {
+    position: fixed;  /* Makes the logo fixed in the viewport */
+    top: 0;           /* Positions the logo at the top */
+    left: 0;          /* Positions the logo at the left */
+    width: 10%;     /* Adjust the width as needed */
+       /* Adjust the height as needed */
+    z-index: 1;
+  }
+  
+  /* Optional styling for the logo */
+  .logo img {
+    width: 10%;      /* Make sure the image takes the full width of the logo container */
+         /* Make sure the image takes the full height of the logo container */
+    object-fit: cover; /* Adjusts the image size to cover the container */
+  }
