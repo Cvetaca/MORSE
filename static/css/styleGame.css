@@ -1,55 +1,130 @@
+@font-face {
+    font-family: arcadeClassic;
+    src: url('/static/content/arcadeclassic/ARCADECLASSIC.TTF');
+}
+@font-face {
+    font-family: nasalization-rg;
+    src: url('/static/content/arcadeclassic/nasalization-rg.otf');
+}
+@font-face {
+    font-family: morseCode;
+    src: url('/static/content/arcadeclassic/MorseCode-wlGw.ttf');
+}
+
 body {
     display: flex;
+    overflow-y: hidden;
     justify-content: center;
     font-family: sans-serif;
     align-items: center;
+    padding-left: 0;
+    padding-right: 0;
     height: 100vh;
     margin: 0;
     background: url('/static/content/graveyard.jpg') no-repeat center center fixed;
     background-size: cover;
     z-index: -1;
+
+    -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+/Edge */
+        user-select: none; /* Standard */
 }
+
+h2{
+    font-family: nasalization-rg;
+    font-size: 24pt;
+    color: white;
+    text-align: center;
+}
+
+p{
+    font-family: nasalization-rg;
+    font-size: 18pt;
+    color: white;
+    text-align: center;
+}
+morseDiv{
+    font-family: morseCode;
+    font-size: 48pt;
+    color: white;
+    text-align: center;
+}
+
 
 .scrolling-wrapper {
     overflow-x: hidden;
     overflow-y: hidden;
     white-space: nowrap;
     scroll-behavior: smooth;
+    transition: visibility 1s, opacity 1s ease;
 }
 
 .card {
+    overflow-x:visible;
     display: inline-block;
     scroll-snap-align: center;
-    border: 2px solid red;
-    color:white;
-    width: 300px;
-    height: 250px;
+    color: white;
+    width: 17%;
+    margin-top: 35px;
+    height: 85%;
+    border: rgba(255,0,0,.8) 5px solid;
     background: black;
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+    word-break: break-word;
+    border-radius: 20px;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
+    position: relative; /* Added */
 }
+
+.card::before { /* Added */
+    
+    content: attr(data-level); /* Added */
+    z-index: 5;
+    position: absolute; /* Added */
+    top: 0; /* Added */
+    left: 50%; /* Added */
+    transform: translate(-50%, -50%); /* Added */
+    width: 65px; /* Adjust as needed */
+    height: 65px; /* Adjust as needed */
+    background-color: black; /* Adjust as needed */
+    border-radius: 50%; /* Adjust as needed */
+    border: rgba(255,0,0,.8) 5px solid;
+
+    display: flex; /* #FF3131Added */
+    justify-content: center; /* Added */
+    align-items: center; /* Added */
+    font-size: 20px; /* Adjust as needed */
+    z-index: 1; /* Added */
+    font-family: nasalization-rg; /* Added */
+    font-size:36pt;
+}
+
+.card h2 {
+    text-align: center;
+}
+
+.disabledCard{
+    pointer-events: none;
+    opacity: 0.5;   
+}
+
+
 .cardDEAD {
     display: inline-block;
     color:white;
     scroll-snap-align: center;
     border: 2px solid red;
-    width: 300px;
-    height: 250px;
+    width: 20%;
+    height: 100%;
     opacity: 0;
-    background: black;
-}
-.cardDEADend {
-    display: inline-block;
-    color:white;
-    scroll-snap-align: center;
-    border: 2px solid red;
-    width: 150px;
-    height: 250px;
-    opacity: 0;
-    background: black;
+    margin-right: 10px;
 }
 
+
 .scrolling-wrapper, .scrolling-wrapper-flexbox {
-    height: 250px;
-    margin-bottom: 20px;
+    height: 60%;
     width: 100%;
     -webkit-overflow-scrolling: touch;
     &::-webkit-scrollbar {
@@ -73,3 +148,156 @@ body {
          /* Make sure the image takes the full height of the logo container */
     object-fit: cover; /* Adjusts the image size to cover the container */
   }
+
+.scroll-buttons {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+.game-button {
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;	
+    border-radius: 20px;
+    height: 40px;
+    margin-bottom: 10px;
+    font-size: 32px;
+    background-color: red;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-family: nasalization-rg;
+    transition: background-color 0.5s;
+}
+
+.game-button:hover {
+    background-color: gray;
+}
+
+.buttonLeft {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    z-index: 1;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    left: 20px;
+}
+.buttonRight {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    z-index: 1;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    right: 20px;
+}
+
+.scroll-buttons button.right {
+    right: 2px;
+}
+
+#countdown {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: inline-block;
+    transform: translate(-50%, -50%);
+    transition: 1s;
+    font-size: 0vw;
+    opacity: 80%;
+    color: #ff4444; 
+  }
+
+
+#flashlight {
+    visibility: hidden;
+    position:absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(0, 0, 0,0); /* Flashlight color */
+    border-radius: 50%;
+    opacity: 0.8; /* Adjust the opacity to control the intensity */
+    top: 50%;
+    right: 50%;
+    /*transition: opacity 0.5s ease;*/
+    /*transform: translate(300%, 300%);*/
+}
+
+.container {
+    text-align: center;
+    visibility: visible;
+    opacity: 1;
+    position: absolute; /* Added position: absolute; */
+    transition: opacity 1s ease;
+}
+
+.containerHidden {
+    text-align: center;
+    visibility: hidden;
+    pointer-events: none; 
+    opacity: 0;
+    position: absolute; /* Added position: absolute; */
+    transition: visibility 1s, opacity 1s ease;
+}
+.game-box {
+    background-color: #111;
+    color: #ff4444;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.start-button {
+    background-color: #ff4444;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+/* Media query for computers */
+@media only screen and (max-width: 1024px) {
+    .card {
+        width: 20%;
+    }
+    .cardDEAD {
+        width: 20%;
+    }
+}
+
+/* Media query for mobile phones */
+@media only screen and (max-width: 1000px) {
+    .scrolling-wrapper, .scrolling-wrapper-flexbox {
+        height: 65%;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+    .card {
+        width: 60%;
+        height: auto;
+    }
+    .cardDEAD {
+        width: 60%;
+    }
+    p{
+        font-size: 16pt;
+    }
+    body{
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

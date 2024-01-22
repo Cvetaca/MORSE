@@ -212,5 +212,5 @@ if __name__ == '__main__':
     #Development
     app.run(debug=True,port=6446)
     #print(checkSession({"UUID":"1234"}))
-    #serve(5432)
+    #serve(6446)
     

@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Morse challenge - Learn</title>
+    <link rel="stylesheet" href="/static/css/loader.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <!--<link rel="stylesheet" href="/static/css/styleGame.css">-->
+    <link rel="stylesheet" href="/static/css/styleGame.css">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
@@ -18,226 +19,8 @@
     <meta name="msapplication-TileColor" content="#ff4444">
     <meta name="theme-color" content="#ff4444">
     <img src="/static/content/logoNoBackground.png" alt="Logo" class="logo">
-    <script> document.createElement('morseDiv');</script>
-    <style>
-        @font-face {
-            font-family: arcadeClassic;
-            src: url('/static/content/arcadeclassic/ARCADECLASSIC.TTF');
-        }
-        @font-face {
-            font-family: nasalization-rg;
-            src: url('/static/content/arcadeclassic/nasalization-rg.otf');
-        }
-        @font-face {
-            font-family: morseCode;
-            src: url('/static/content/arcadeclassic/MorseCode-wlGw.ttf');
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            font-family: sans-serif;
-            align-items: center;
-            padding-left: 5%;
-            padding-right: 5%;
-            height: 100vh;
-            margin: 0;
-            background: url('/static/content/graveyard.jpg') no-repeat center center fixed;
-            background-size: cover;
-            z-index: -1;
-        }
-
-        h2{
-            font-family: nasalization-rg;
-            font-size: 24pt;
-            color: white;
-            text-align: center;
-        }
-
-        p{
-            font-family: nasalization-rg;
-            font-size: 18pt;
-            color: white;
-            text-align: center;
-        }
-        morseDiv{
-            font-family: morseCode;
-            font-size: 48pt;
-            color: white;
-            text-align: center;
-        }
-        
-        
-        .scrolling-wrapper {
-            overflow-x: hidden;
-            overflow-y: hidden;
-            white-space: nowrap;
-            scroll-behavior: smooth;
-        }
-        
-        .card {
-            display: inline-block;
-            scroll-snap-align: center;
-            color: white;
-            width: 20%;
-            height: 85%;
-            top:40px;
-            border: red 5px solid;
-            background: black;
-            margin-right: 2.5%;
-            margin-left: 2.5%;
-            word-break: break-word;
-            border-radius: 20px;
-            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
-            position: relative; /* Added */
-        }
-        
-        .card::before { /* Added */
-            
-            content: attr(data-level); /* Added */
-            z-index: 5;
-            position: absolute; /* Added */
-            top: 0; /* Added */
-            left: 50%; /* Added */
-            transform: translate(-50%, -50%); /* Added */
-            width: 65px; /* Adjust as needed */
-            height: 65px; /* Adjust as needed */
-            background-color: black; /* Adjust as needed */
-            border-radius: 50%; /* Adjust as needed */
-            border: #FF3131 5px solid;
-            display: flex; /* #FF3131Added */
-            justify-content: center; /* Added */
-            align-items: center; /* Added */
-            font-size: 20px; /* Adjust as needed */
-            z-index: 1; /* Added */
-            font-family: nasalization-rg; /* Added */
-            font-size:36pt;
-        }
-        
-        .card h2 {
-            text-align: center;
-        }
-
-        
-        .cardDEAD {
-            display: inline-block;
-            color:white;
-            scroll-snap-align: center;
-            border: 2px solid red;
-            width: 20%;
-            height: 100%;
-            opacity: 0;
-            margin-right: 10px;
-        }
-      
-        
-        .scrolling-wrapper, .scrolling-wrapper-flexbox {
-            height: 60%;
-            width: 100%;
-            -webkit-overflow-scrolling: touch;
-            &::-webkit-scrollbar {
-                display: none;
-            }
-        }
-        
-        
-        .logo {
-            position: fixed;  /* Makes the logo fixed in the viewport */
-            top: 0;           /* Positions the logo at the top */
-            left: 0;          /* Positions the logo at the left */
-            width: 10%;     /* Adjust the width as needed */
-               /* Adjust the height as needed */
-            z-index: 1;
-          }
-          
-          /* Optional styling for the logo */
-          .logo img {
-            width: 10%;      /* Make sure the image takes the full width of the logo container */
-                 /* Make sure the image takes the full height of the logo container */
-            object-fit: cover; /* Adjusts the image size to cover the container */
-          }
-        
-        .scroll-buttons {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-        .game-button {
-            width: 80%;
-            margin-left: 10%;
-            margin-right: 10%;	
-            border-radius: 20px;
-            height: 40px;
-            margin-bottom: 10px;
-            font-size: 32px;
-            background-color: red;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-family: nasalization-rg;
-            transition: background-color 0.5s;
-        }
-        
-        .game-button:hover {
-            background-color: gray;
-        }
-        
-        .buttonLeft {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: transparent;
-            z-index: 1;
-            border: none;
-            color: white;
-            font-size: 32px;
-            cursor: pointer;
-            left: 20px;
-        }
-        .buttonRight {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: transparent;
-            z-index: 1;
-            border: none;
-            color: white;
-            font-size: 32px;
-            cursor: pointer;
-            right: 20px;
-        }
-        
-        .scroll-buttons button.right {
-            right: 2px;
-        }
-        
-        /* Media query for computers */
-        @media only screen and (max-width: 1024px) {
-            .card {
-                width: 20%;
-            }
-            .cardDEAD {
-                width: 20%;
-            }
-        }
-        
-        /* Media query for mobile phones */
-        @media only screen and (max-width: 480px) {
-            .card {
-                width: 60%;
-            }
-            .cardDEAD {
-                width: 60%;
-            }
-            p{
-                font-size: 16pt;
-            }
-        }
-        
-    </style>
     </head>
-    <style>
+    <!--<style>
     .center-dot {
         position: fixed;
         top: 50%;
@@ -250,148 +33,158 @@
         z-index: 9999;
     }
     </style>
-    <div class="center-dot"></div>
+    <div class="center-dot"></div>-->
     <body>
-        
-    <div class="scrolling-wrapper" >
+        <div id="loaderShell">
+        <div id="loader">
+            <div class="ls-particles ls-part-1"></div>
+            <div class="ls-particles ls-part-2"></div>
+            <div class="ls-particles ls-part-3"></div>
+            <div class="ls-particles ls-part-4"></div>
+            <div class="ls-particles ls-part-5"></div>
+            <div class="lightsaber ls-left ls-green"></div>
+            <div class="lightsaber ls-right ls-red"></div>
+          </div>
+        </div>
+    <div class="scrolling-wrapper" id="swrapper">
         <div class="cardDEAD"><h2>Card x</h2></div>
         <div class="cardDEAD"><h2>Card x</h2></div>
         <div class="cardDEAD"><h2>Card x</h2></div>
-        <div class="card" data-level="1"> <!-- Added data-level attribute -->
+        <div class="card" data-level="1" id="lvl1">  
             <br><br>
             <h2>GROUP 1</h2>
             <p>E &centerdot;  &nbsp; I &centerdot; &centerdot;<br>S &centerdot; &centerdot; &centerdot; &nbsp; H &centerdot; &centerdot; &centerdot; &centerdot;</p>
             <br>
             <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
             <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
-            <button class="game-button">START</button>
+            <button class="game-button" onclick="startGame('0',1,0)" ontouchstart="startGame('0',0,0)">START</button>
         </div>
-        <div class="card" data-level="2"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="2" id="lvl2">  
             <br><br>
             <h2>GROUP 2</h2>
             <p>T &ndash; &nbsp; M 	&ndash;	&ndash;<br>O 	&ndash;	&ndash;	&ndash;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L2">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L2T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="3"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="3" id="lvl3">  
             <br><br>
             <h2>GROUP 3</h2>
             <p>A &centerdot; &ndash; &nbsp; U 	&centerdot; &centerdot; &ndash;<br>V 	&centerdot; &centerdot; &centerdot; &ndash;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L3">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L3T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="4"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="4" id="lvl4">  
             <br><br>
             <h2>GROUP 4</h2>
             <p>N &ndash; &centerdot; &nbsp; D 	&ndash; &centerdot; &centerdot; <br>B 	&ndash; &centerdot; &centerdot; &centerdot; </p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L4">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L4T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="5"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="5" id="lvl5">  
             <br><br>
             <h2>GROUP 5</h2>
             <p>P  &centerdot; &ndash; &ndash; &centerdot;<br>R &centerdot; &ndash; &centerdot;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L5">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L5T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="6"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="6" id="lvl6">  
             <br><br>
             <h2>GROUP 6</h2>
             <p>X &ndash; &centerdot; &centerdot; &ndash; <br>K &ndash; &centerdot; &ndash;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L6">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L6T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="7"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="7" id="lvl7">  
             <br><br>
             <h2>GROUP 7</h2>
             <p>G &ndash; &ndash; &centerdot;<br>W &centerdot; &ndash; &ndash;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L7">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L7T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="8"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="8" id="lvl8">  
             <br><br>
             <h2>GROUP 8</h2>
             <p>L &centerdot; &ndash; &centerdot; &centerdot;<br>F &centerdot; &centerdot; &ndash; &centerdot;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L8">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L8T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="9"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="9" id="lvl9">  
             <br><br>
             <h2>GROUP 9</h2>
             <p>Y &ndash; &centerdot; &ndash; &ndash;<br>Q &ndash; &ndash; &centerdot; &ndash;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L9">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L9T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="10"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="10" id="lvl10">  
             <br><br>
             <h2>REMAINING</h2>
             <p>C &ndash; &centerdot; &ndash; &centerdot; &nbsp; J &centerdot; &ndash; &ndash; &ndash; <br> Z &ndash; &ndash; &centerdot; &centerdot;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L10">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L10T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="11"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="11" id="lvl11">  
             <br><br>
             <h2>NUMBERS 1</h2>
             <p>From:&nbsp;1 &centerdot; &ndash; &ndash; &ndash; &ndash;
             <br>To:&nbsp;5 &centerdot; &centerdot; &centerdot; &centerdot; &centerdot;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L11">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L11T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="12"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="12" id="lvl12">  
             <br><br>
             <h2>NUMBERS 2</h2>
             <p>From:&nbsp;6 &ndash; &centerdot; &centerdot; &centerdot; &centerdot;
             <br>To:&nbsp;0 &ndash; &ndash; &ndash; &ndash; &ndash;</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L12">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L1T2">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="13"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="13" id="lvl13">  
             <br><br>
             <h2>MIX</h2>
             <p>Speed level<br>SLOW</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L13">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L13T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="14"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="14" id="lvl14">  
             <br><br>
             <h2>MIX</h2>
             <p>Speed level<br>MID</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L14">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L14T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
-        <div class="card" data-level="15"> <!-- Added data-level attribute -->
+        <div class="card disabledCard" data-level="15" id="lvl15">  
             <br><br>
             <h2>MIX</h2>
             <p>Speed level<br>FAST</p>
             <br>
-            <p>Points: <span id="L1">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
-            <p>Time: <span id="L1T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
+            <p>Points: <span id="L15">0</span>/20 &nbsp;<i class="fa fa-times"></i></p>
+            <p>Time: <span id="L15T">0,00</span>s &nbsp;<i class="fa fa-times"></i></p>
             <button class="game-button">START</button>
         </div>
         <div class="cardDEAD"><h2>Card x</h2></div>
@@ -399,8 +192,8 @@
         <div class="cardDEAD"><h2>Card x</h2></div>
     </div>
 
-    <button onclick="scrollToLeft()" class="buttonLeft" id="scrollLeftButton"><i class="fa fa-arrow-left"></i></button>
-    <button onclick="scrollToRight()" class="buttonRight" id="scrollRightButton"><i class="fa fa-arrow-right"></i></button>
+    <button onclick="scrollToLeft()" ontouchstart="scrollToLeft()" class="buttonLeft" id="scrollLeftButton"><i class="fa fa-arrow-left"></i></button>
+    <button onclick="scrollToRight()" ontouchstart="scrollToRight()" class="buttonRight" id="scrollRightButton"><i class="fa fa-arrow-right"></i></button>
 
     <script>
         
@@ -472,9 +265,28 @@
             console.log(card.offsetLeft, scrollingWrapper.offsetWidth, card.offsetWidth)
             card.scrollIntoView({ behavior: 'smooth', inline: 'center' ,block: 'center'});
         });
-        
+        setTimeout(function() {
+            const loaderShell = document.getElementById('loaderShell');
+            loaderShell.style.opacity = '0';
+            loaderShell.style.visibility = 'hidden';
+        }, 2000);
         scrollingWrapper.addEventListener('scroll', updateScrollButtons);
         
     </script>
+    <div id="container2" class="containerHidden">
+        <div class="game-box">
+            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="location.reload();"></i>
+            <h1>Score</h1>
+                <p>Correct answers: <span id="score"></span></p>
+                <p>Time: <span id="time"></span>s</p>
+                <span id="difference">
+
+                </span>
+                
+            <button class="start-button" id="restart" disabled onclick="window.location.reload();">RESTART</button>&nbsp;<button class="start-button" id="scores" disabled onclick='location.href="/scores"'>SCORES</button>
+        </div>
+    </div>
+    <div id="flashlight"></div>
+    <script src="/static/js/practice.js"></script>
     </body>
     </html>
