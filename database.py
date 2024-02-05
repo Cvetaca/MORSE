@@ -18,10 +18,10 @@ def get_database_connection():
 
 # Insert data into the database
 def insertToDatabase(dataIn):
-    data = (datetime.now(), dataIn['id'], dataIn['mode'], dataIn['score'], dataIn["total"], dataIn["totalTime"])
+    data = (datetime.now(), dataIn['id'], dataIn['mode'], dataIn['score'], dataIn["total"], dataIn["totalTime"],0)
     with get_database_connection() as con:
         cur = con.cursor()
-        cur.execute("INSERT INTO scores VALUES (?,?,?,?,?,?)", data)
+        cur.execute("INSERT INTO scores VALUES (?,?,?,?,?,?,?)", data)
         con.commit()
 
 # Get the last ID from the database
@@ -64,16 +64,16 @@ def checkUUID(UUID):
         else:
             return False
 def insertGameStart(sessionID,challenge):
-    data = (datetime.now(), sessionID, challenge, "", 0)
+    data = (datetime.now(), sessionID, challenge, "", 0,None,0.0,0)
     with get_database_connection() as con:
         cur = con.cursor()
-        cur.execute("INSERT INTO gameData VALUES (?,?,?,?,?)", data)
+        cur.execute("INSERT INTO gameData VALUES (?,?,?,?,?,?,?,?)", data)
         con.commit()
         
 def updateChar(UUID,char):
     with get_database_connection() as con:
         cur = con.cursor()
-        response=cur.execute("SELECT response,charIndex,challenge FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        response=cur.execute("SELECT response,charIndex,challenge,timeIncrement,lastCharRequest FROM gamedata WHERE id = ?", (UUID,)).fetchone()
         if(response==None):return 2
         getChar=response[0]
         index=response[1]
@@ -87,14 +87,24 @@ def updateChar(UUID,char):
         else:
                 getChar=getChar+","+char.upper()
         index=index+1
-        cur.execute("UPDATE gameData SET response = ?, charIndex = ? WHERE id = ?",(getChar,index,UUID))
+        newTimeIncrement=float(response[3])+float((datetime.now()-datetime.strptime(response[4], "%Y-%m-%d %H:%M:%S.%f")).total_seconds())
+        cur.execute("UPDATE gameData SET response = ?, charIndex = ?,timeIncrement=? WHERE id = ?",(getChar,index,newTimeIncrement,UUID))
         con.commit()
         return ok
+    
+def getTime(UUID):
+    with get_database_connection() as con:
+        cur = con.cursor()
+        response=cur.execute("SELECT timeIncrement FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        if(response==None):return None
+        return response[0]
 
 def serveChar(UUID):
     with get_database_connection() as con:
         cur = con.cursor()
         response=cur.execute("SELECT challenge,charIndex FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        cur.execute("UPDATE gameData SET lastCharRequest=? WHERE id = ?",(datetime.now(),UUID))
+        con.commit()
         if(response==None):return None
         challenge=str(response[0]).split(",")
         index=response[1]
@@ -104,12 +114,13 @@ def serveChar(UUID):
 def getResults(UUID):
     with get_database_connection() as con:
         cur = con.cursor()
-        response=cur.execute("SELECT challenge,response,rawDate FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        response=cur.execute("SELECT challenge,response,rawDate,timeIncrement FROM gamedata WHERE id = ?", (UUID,)).fetchone()
         if(response==None):return None
         challenge=str(response[0]).split(",")
         getChar=str(response[1]).split(",")
         rawDate=response[2]
-        return (challenge,getChar,rawDate)
+        timeIncrement=response[3]
+        return (challenge,getChar,rawDate,timeIncrement)
     
 def destroyEntry(UUID):
     #DELETE FROM your_table_name WHERE id = ?

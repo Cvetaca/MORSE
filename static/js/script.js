@@ -1,32 +1,18 @@
+function isMobileDevice() {
+	return window
+		.matchMedia("only screen and (max-width: 760px)").matches;
+}
+
 function getMousePosition(e) {
   let mouseX = 0;
   let mouseY = 0;
   let flashlightCircle = document.getElementById("flashlightCircle");
-  const isTouchDevice = () => {
-    try {
-      document.createEvent("TouchEvent");
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
-  mouseX = !isTouchDevice() ? e.pageX : e.touches[0].pageX;
-  mouseY = !isTouchDevice() ? e.pageY : e.touches[0].pageY;
+  mouseX = e.pageX
+  mouseY = e.pageY;
   flashlightCircle.style.setProperty("--Xpos", mouseX + "px");
   flashlightCircle.style.setProperty("--Ypos", mouseY + "px");
 }
 
-
-async function startScreen() {
-  
-
-  
-  
-  document.addEventListener("mousemove", getMousePosition);
-  document.addEventListener("touchmove", getMousePosition);
-  
-  return
-}
 
 
 
@@ -84,6 +70,7 @@ function toggle(){
 }
 
 function changeToPlayWindow(){
+  document.addEventListener("mousemove", getMousePosition);
   const container3 = document.getElementById("container3");
   const container = document.getElementById("container");
 
@@ -96,11 +83,15 @@ function changeToPlayWindow(){
   container.style.visibility = "visible";
   container.style.opacity = 1;
   container.style.pointerEvents = "auto";
+
   
-  const flashlightCircle = document.getElementById("flashlightCircle");
+  if(!isMobileDevice()){
+    const flashlightCircle = document.getElementById("flashlightCircle");
+    flashlightCircle.style.visibility = "visible";
+    flashlightCircle.style.animation = "fadeIn 1s ease forwards";
+  }
   const flashlight = document.getElementById("flashlight");
-  flashlightCircle.style.visibility = "visible";
-  flashlightCircle.style.animation = "fadeIn 1s ease forwards";
+  
   flashlight.style.visibility = "visible";
 }
 
@@ -415,10 +406,13 @@ async function competition(mode,name,pause, lLength, sLength){
   let data={
     "UUID":UUID["UUID"]
   }
+  localStorage.setItem("UUID", UUID["UUID"]);
+
   await new Promise(r => setTimeout(r, 1000));
   
   while (true){
     //await new Promise(r => setTimeout(r, 1000));
+    let networkError = false
     let character = await fetch(`/api/game/getChar`, {
       method: 'POST',
       headers: {
@@ -430,8 +424,16 @@ async function competition(mode,name,pause, lLength, sLength){
       if (!response.ok) {
           throw new Error('Network response was not ok');
       }
-    return response.json();
+    
+    try {
+      return response.json();
+    }catch (error) {
+      console.error('Error:', error);
+      networkError=true
+    }
+    
     })
+    if(networkError)continue
     if(character["END"]==1)break
     await new Promise(r => setTimeout(r, 1000));
     character=character["char"]
@@ -454,6 +456,7 @@ async function competition(mode,name,pause, lLength, sLength){
     }
   return response.json();
   })
+  localStorage.removeItem("UUID");  
   document.getElementById("container2").style.visibility = "visible"
   document.getElementById("container2").style.opacity = 1
   document.getElementById("restart").disabled = false
@@ -575,8 +578,12 @@ async function flashMorseCode(code, pause, lLength, sLength) {
 
 
 $(document).ready(function () {
-  startScreen()
-
+  if(localStorage.hasOwnProperty("UUID")){
+    document.getElementById("resumePopup").style.visibility = "visible"
+    document.getElementById("resumePopup").style.opacity = 1
+    document.getElementById("resumePopup").style.pointerEvents = "auto"
+    //TODO
+  }
 });
 
 //flashMorseCode(morse

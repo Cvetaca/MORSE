@@ -36,9 +36,9 @@ def charToMorseArray(char):
     else:
         return []
     
-def calculateResult(challenge,response,time):
-    date_format = "%Y-%m-%d %H:%M:%S.%f"
-    endTime=float((datetime.now()-datetime.strptime(time, date_format)).total_seconds())
+def calculateResult(challenge,response):
+    #date_format = "%Y-%m-%d %H:%M:%S.%f"
+    #endTime=float((datetime.now()-datetime.strptime(time, date_format)).total_seconds())
     # Ensure both arrays have the same length
     if len(challenge) != len(response):
         return (-1,0)
@@ -49,4 +49,5 @@ def calculateResult(challenge,response,time):
         if challenge[i] == response[i]:
             count += 1
 
-    return (count,endTime)
+    #return (count,endTime)
+    return count

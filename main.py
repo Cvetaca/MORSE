@@ -9,7 +9,7 @@ from flask_limiter.util import get_remote_address
 import gameMorse
 from flask import render_template
 
-ENV_compLength=30
+ENV_compLength=3
 
 def getIp():
     return request.headers.get('cf-connecting-ip')
@@ -71,6 +71,13 @@ def serve_dev():
 
 
 
+@app.route('/api/checkGameSession', methods=['GET'])
+def checkSession(response):
+    if "UUID" in response.keys():
+        return db.checkUUID(response["UUID"])
+    else:
+        return False
+
 @app.route('/api/checkRoomExists/<roomID>', methods=['GET'])
 @limiter.exempt
 def check_room_exists(roomID):
@@ -113,6 +120,7 @@ def generateChallenge():
                     db.insertGameStart(sessionID,challenge)
                     return jsonify({"UUID":sessionID})
                 except Exception as e:
+                    print(e)
                     return jsonify({"error": "Invalid JSON data"}), 400
     else:
         return jsonify({"error": "Only POST requests are allowed"}), 405
@@ -147,6 +155,8 @@ def postChar():
                 try:
                     json_data = request.get_json()
                     if "char" in json_data.keys():
+                            if len(json_data["char"])>1:
+                                return jsonify({"error": "ONLY ONE CHARACTER ALLOWED! NO FUNNY BUSINESS PLEASE"}), 405 
                             response=db.updateChar(json_data["UUID"],json_data["char"])
                             if(response==0):
                                 return jsonify({"message":"OK"})
@@ -160,6 +170,7 @@ def postChar():
                              return jsonify({"error": "No key provided"}), 400
                    
                 except Exception as e:
+                    print(e)
                     return jsonify({"error": "Invalid JSON data"}), 400
         else:
             return jsonify({"error": "Invalid content type, JSON expected"}), 400
@@ -173,12 +184,11 @@ def getResults():
         if request.is_json:
                 try:
                     json_data = request.get_json()
-
                     if ("name" in json_data.keys() and "mode" in json_data.keys()):
                             result=db.getResults(json_data["UUID"])
                             if(result!=None):
-                                score=gameMorse.calculateResult(result[0],result[1],result[2])
-                                if(score[0]==-1):return jsonify({"error": "Game not finished yet"}), 400
+                                score=gameMorse.calculateResult(result[0],result[1])
+                                if(score==-1):return jsonify({"error": "Game not finished yet"}), 400
                                 mode=""
                                 if(json_data["mode"]==0):
                                     mode="Easy"
@@ -189,18 +199,20 @@ def getResults():
                                 data={
                                     "id":json_data["name"],
                                     "mode":mode,
-                                    "score":score[0],
+                                    "score":score,
                                     "total":ENV_compLength,
-                                    "totalTime":score[1]
+                                    "totalTime":result[3]
                                 }
                                 db.insertToDatabase(data)
                                 db.destroyEntry(json_data["UUID"])
-                                return jsonify({"score":score[0],"time":score[1],"total":ENV_compLength})
+                                #return jsonify({"score":score[0],"time":score[1],"total":ENV_compLength})
+                                return jsonify({"score":score,"time":result[3],"total":ENV_compLength})
                             else:
                                 return jsonify({"error": "INVALID OR NO UUID!"}), 400
                     else:
                             return jsonify({"error": "Insuficient data"}), 400
                 except Exception as e:
+                    print(e)
                     return jsonify({"error": "Invalid JSON data"}), 400
         else:
             return jsonify({"error": "Invalid content type, JSON expected"}), 400

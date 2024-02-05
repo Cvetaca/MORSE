@@ -22,6 +22,8 @@ cur.execute("""CREATE TABLE gameData (
             challenge nvarchar(105) NOT NULL,
             response nvarchar(105),
             charIndex int NOT NULL,
+            lastCharRequest TIMESTAMP,
+            timeIncrement REAL NOT NULL DEFAULT 0,
             roomID TEXT DEFAULT '0'
             )""")
 con.commit()
