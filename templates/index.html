@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Morse challenge</title>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/css/style.css">
-
+    <img src="/static/content/logoNoBackground.png" alt="Logo" class="logo">
     <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
@@ -17,7 +18,7 @@
     <meta name="application-name" content="Morse Challenge">
     <meta name="msapplication-TileColor" content="#ff4444">
     <meta name="theme-color" content="#ff4444">
-    <img src="/static/content/logoNoBackground.png" alt="Logo" class="logo">
+    
 </head>
 <body>
     <input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
@@ -102,18 +103,22 @@
 
 <div id="resumePopup" class="popup-container game-box containerHidden">
     <p style="margin-top:0px;margin-bottom:5px;font-size:11px;"><b>Do you want to resume the last game?</b></p>
-    <button class="resume-button">Resume</button>
-    <button class="resume-button">Dismiss</button>
+    <button class="resume-button" onclick="resumeGame()">Resume</button>
+    <button class="resume-button" onclick="dismissPopup()">Dismiss</button>
 </div>
 
 <!-- Rest of the code -->
-
+    <h1 id="supportText"></h1>
     <div id="flashlight"></div>
     <div id="flashlightCircle"></div>
-    <script src="/static/js/script.js">
-    </script>
+    <div style="width: 25px;text-align: left;position: absolute; top: 10px; right: 10px; cursor: pointer; color:white; font-size:32px;" id="mute">
+        <i id="upDown" class="fa fa-volume-up" onclick="audioOnOff()"></i>
+    </div>
+    
     <footer class="footer">
         Developed by <a href="https://valentincic.eu" target="_blank">Tjaž</a>
     </footer>
+    <script src="/static/js/script.js">
+    </script>
 </body>
 </html>

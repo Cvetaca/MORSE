@@ -90,9 +90,7 @@ function changeToPlayWindow(){
     flashlightCircle.style.visibility = "visible";
     flashlightCircle.style.animation = "fadeIn 1s ease forwards";
   }
-  const flashlight = document.getElementById("flashlight");
   
-  flashlight.style.visibility = "visible";
 }
 
 function changeToCreateWindow(){
@@ -179,6 +177,26 @@ function changeFromEnterToMain(){
   container3.style.pointerEvents = "auto";
 }
 
+function hideAll(){
+  const container3 = document.getElementById("container3");
+  const container4 = document.getElementById("container4");
+  const container5 = document.getElementById("container5");
+  const container = document.getElementById("container");
+
+  container3.style.visibility = "hidden";
+  container3.style.opacity = 0;
+  container3.style.pointerEvents = "none";
+  container4.style.visibility = "hidden";
+  container4.style.opacity = 0;
+  container4.style.pointerEvents = "none";
+  container5.style.visibility = "hidden";
+  container5.style.opacity = 0;
+  container5.style.pointerEvents = "none";
+  container.style.visibility = "hidden";
+  container.style.opacity = 0;
+  container.style.pointerEvents = "none";
+}
+
 
 function createRoom(){
   return
@@ -200,9 +218,8 @@ function generateChallenge(challengelength) {
   return challenge
 }
 
-async function startGame(id, level,challengelength,competitionMode) {
-  //console.log(competitionMode)
-  //console.log(id, level)
+
+function countdownStart(){
   var counter = 3;
 
   var timer = setInterval(function () {
@@ -221,6 +238,15 @@ async function startGame(id, level,challengelength,competitionMode) {
     counter--;
     if (counter == -1) clearInterval(timer);
   }, 1000);
+}
+
+async function startGame(id, level,challengelength,competitionMode) {
+  //console.log(competitionMode)
+  //console.log(id, level)
+  countdownStart()
+  const flashlight = document.getElementById("flashlight");
+  
+  flashlight.style.visibility = "visible";
   let pause, lLength, sLength,mode,intLevel
   switch (level) {
     case "0":
@@ -247,10 +273,14 @@ async function startGame(id, level,challengelength,competitionMode) {
       break;
   }
   if(competitionMode){
-    await new Promise(r => setTimeout(r, 3000));
-    competition(intLevel,id,pause, lLength, sLength)
+    
+    
+    let resumeGamevar=false
+    competition(intLevel,id,pause, lLength, sLength,resumeGamevar)
     return
   }
+  initializeAudioContext();
+
   let challenge = await generateChallenge(challengelength)
   await new Promise(r => setTimeout(r, 3000));
   let userInput = []
@@ -269,6 +299,8 @@ async function startGame(id, level,challengelength,competitionMode) {
       const handleInput = (event) => {
         userInput.push(event.target.value.toUpperCase());
         inputField.removeEventListener('input', handleInput);
+        inputField.removeEventListener('blur', handleFocus);
+        inputField.removeEventListener('touchstart', handleFocus);
         document.body.removeChild(inputField);
         resolve();
       };
@@ -279,6 +311,7 @@ async function startGame(id, level,challengelength,competitionMode) {
 
       inputField.addEventListener('input', handleInput);
       inputField.addEventListener('blur', handleFocus);
+      inputField.addEventListener('touchstart', handleFocus);
       inputField.focus();
     });
   }
@@ -286,9 +319,10 @@ async function startGame(id, level,challengelength,competitionMode) {
   for (const element of challenge) {
     await new Promise(r => setTimeout(r, 1000));
     let char = await charToMorseArray(element);
-    await flashMorseCode(char, pause, lLength, sLength);
+    await flashMorseCode(char, pause, lLength, sLength,intLevel,false);
     //console.log(char);
     await waitForUserInput();
+    document.getElementById("supportText").innerHTML=""
     //console.log(userInput); // Log user input for each element
 
   }
@@ -379,6 +413,8 @@ function waitForUserInputComp(UUID) {
       })
       
       inputField.removeEventListener('input', handleInput);
+      inputField.removeEventListener('blur', handleFocus);
+      inputField.removeEventListener('touchstart', handleFocus);
       document.body.removeChild(inputField);
       resolve();
     }
@@ -389,28 +425,48 @@ function waitForUserInputComp(UUID) {
 
     inputField.addEventListener('input', handleInput);
     inputField.addEventListener('blur', handleFocus);
+    inputField.addEventListener('touchstart', handleFocus);
     inputField.focus();
   });
 }
 
-async function competition(mode,name,pause, lLength, sLength){
-  let UUID = await fetch(`/api/game/generateChallenge`,{
-    method:'POST'
-  })
-        .then(response => {
-        if (!response.ok) {
-              throw new Error('Network response was not ok');
-        }
-        return response.json();
-  })
-  let data={
-    "UUID":UUID["UUID"]
-  }
-  localStorage.setItem("UUID", UUID["UUID"]);
+async function competition(mode,name,pause, lLength, sLength,resumeGame){
+  initializeAudioContext();
 
-  await new Promise(r => setTimeout(r, 1000));
+  let data
+  if(!resumeGame){
+    let UUID = await fetch(`/api/game/generateChallenge`,{
+      method:'POST'
+    })
+          .then(response => {
+          if (!response.ok) {
+                throw new Error('Network response was not ok');
+          }
+          return response.json();
+    })
+    data={
+      "UUID":UUID["UUID"]
+    }
+    localStorage.setItem("UUID", UUID["UUID"]);
+    localStorage.setItem("mode", mode);
+    localStorage.setItem("name", name);
+    localStorage.setItem("pause", pause);
+    localStorage.setItem("lLength", lLength);
+    localStorage.setItem("sLength", sLength);
+  }else{
+    countdownStart()
+    const flashlight = document.getElementById("flashlight");
+  
+    flashlight.style.visibility = "visible";
+    let UUID = localStorage.getItem("UUID");
+    data={
+      "UUID":UUID}
+    console.log("competition started")
+  }
+  await new Promise(r => setTimeout(r, 3000));
   
   while (true){
+
     //await new Promise(r => setTimeout(r, 1000));
     let networkError = false
     let character = await fetch(`/api/game/getChar`, {
@@ -422,7 +478,8 @@ async function competition(mode,name,pause, lLength, sLength){
     })
       .then(response => {
       if (!response.ok) {
-          throw new Error('Network response was not ok');
+          networkError=true
+          console.log('Network response was not ok');
       }
     
     try {
@@ -437,8 +494,10 @@ async function competition(mode,name,pause, lLength, sLength){
     if(character["END"]==1)break
     await new Promise(r => setTimeout(r, 1000));
     character=character["char"]
-    await flashMorseCode(character,pause, lLength, sLength)
+    console.log(character)
+    await flashMorseCode(character,pause, lLength, sLength,mode,true)
     await waitForUserInputComp(data);
+    document.getElementById("supportText").innerHTML=""
   }
   
   data["mode"]=mode
@@ -456,13 +515,21 @@ async function competition(mode,name,pause, lLength, sLength){
     }
   return response.json();
   })
-  localStorage.removeItem("UUID");  
+
+  localStorage.removeItem("UUID"); 
+  localStorage.removeItem("mode");
+  localStorage.removeItem("name");
+  localStorage.removeItem("pause");
+  localStorage.removeItem("lLength");
+  localStorage.removeItem("sLength");
+
   document.getElementById("container2").style.visibility = "visible"
   document.getElementById("container2").style.opacity = 1
+  document.getElementById("container2").style.pointerEvents = "auto"
   document.getElementById("restart").disabled = false
   document.getElementById("scores").disabled = false
   document.body.style.setProperty("cursor", "initial")
-    document.body.style.setProperty("caret-color", "white")
+  document.body.style.setProperty("caret-color", "white")
   let score = results["score"]
   let time = results["time"]
   document.getElementById("score").innerHTML = score + "/" + results["total"]
@@ -513,10 +580,55 @@ async function charToMorseArray(char) {
   }
 }
 
+let FREQUENCY = 440;
+
+let note_context;
+let note_node;
+let gain_node;
+let audioContextInitialized = false;
+
+function initializeAudioContext() {
+  note_context = new AudioContext();
+  note_node = note_context.createOscillator();
+  gain_node = note_context.createGain();
+  note_node.frequency.value = FREQUENCY.toFixed(2);
+  gain_node.gain.value = 0;
+  note_node.connect(gain_node);
+  gain_node.connect(note_context.destination);
+  note_node.start();
+  audioContextInitialized = true;
+}
+
+let mute=false;
+
+function audioOnOff(){
+  if(!mute){
+    try{
+      note_node.frequency.value=0;
+    }catch(e){
+      FREQUENCY=0;
+    }
+    
+    document.getElementById("upDown").classList.remove("fa-volume-up");
+    document.getElementById("upDown").classList.add("fa-volume-off");
+    mute=true;
+  }else{
+    try{
+      note_node.frequency.value=FREQUENCY.toFixed(2);
+    }catch(e){
+      FREQUENCY=440;
+    }
+    document.getElementById("upDown").classList.remove("fa-volume-off");
+    document.getElementById("upDown").classList.add("fa-volume-up");
+    
+    mute=false;
+  }
+  
+}
 
 
-
-async function flashMorseCode(code, pause, lLength, sLength) {
+async function flashMorseCode(code, pause, lLength, sLength,mode,competitionMode) {
+  
   let currentIndex = 0;
   const flashlight = document.getElementById('flashlight');
 
@@ -524,18 +636,25 @@ async function flashMorseCode(code, pause, lLength, sLength) {
     return new Promise((resolve) => {
       if (currentIndex < code.length) {
         if (code[currentIndex] === 1) {
-          flashlight.style.boxShadow = '0 0 5px 20px rgba(196, 180, 84, 0.8)'; // Long flash
-          flashlight.style.backgroundColor = 'rgb(196, 180, 84)';
+          //flashlight.style.boxShadow = '0 0 5px 20px rgba(114,142,182,0.8)'; // Long flash
+          //flashlight.style.background='radial-gradient(circle at 50% 50%, #fff 0%,  #aaa 20%, #555 50%,  transparent 80%);'
+          flashlight.style.opacity = 1;
+          if(mode===0 && competitionMode===false){
+            document.getElementById("supportText").innerHTML += "&ndash;&nbsp;"
+          }
+          
           const startTime = performance.now();
-
+          gain_node.gain.setTargetAtTime(0.1, 0, 0.001)
           function animate() {
             const currentTime = performance.now();
             const elapsedTime = currentTime - startTime;
             if (elapsedTime < lLength) {
               requestAnimationFrame(animate); // Continue animation
             } else {
-              flashlight.style.boxShadow = 'none'; // Turn off the flashlight
-              flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+              flashlight.style.opacity = 0;
+              //flashlight.style.boxShadow = 'none'; // Turn off the flashlight
+              //flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+              gain_node.gain.setTargetAtTime(0, 0, 0.001)
               currentIndex++;
               setTimeout(() => {
                 flash().then(resolve); // Pause between long flashes (adjust as needed)
@@ -545,18 +664,26 @@ async function flashMorseCode(code, pause, lLength, sLength) {
 
           requestAnimationFrame(animate);
         } else {
-          flashlight.style.boxShadow = '0 0 5px 20px rgba(196, 180, 84, 0.8)'; // Short flash
-          flashlight.style.backgroundColor = 'rgb(196, 180, 84)';
+          //flashlight.style.boxShadow = '0 0 5px 20px rgba(114,142,182,0.8)'; // Short flash
+          ///flashlight.style.backgroundColor = 'rgba(114,142,182,0.95)';
+          flashlight.style.opacity = 1;
+          if(mode===0 && competitionMode===false){
+            document.getElementById("supportText").innerHTML += "&centerdot;&nbsp;"
+          }
           const startTime = performance.now();
-
+          gain_node.gain.setTargetAtTime(0.1, 0, 0.001)
+          //playBeep(sLength / 100);
           function animate() {
             const currentTime = performance.now();
             const elapsedTime = currentTime - startTime;
             if (elapsedTime < sLength) {
               requestAnimationFrame(animate); // Continue animation
             } else {
-              flashlight.style.boxShadow = 'none'; // Turn off the flashlight
-              flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+              //flashlight.style.boxShadow = 'none'; // Turn off the flashlight
+              //flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+              flashlight.style.opacity = 0;
+              
+              gain_node.gain.setTargetAtTime(0, 0, 0.001)
               currentIndex++;
               setTimeout(() => {
                 flash().then(resolve); // Pause between short flashes (adjust as needed)
@@ -577,13 +704,39 @@ async function flashMorseCode(code, pause, lLength, sLength) {
 }
 
 
+function resumeGame(){
+  let mode = localStorage.getItem("mode");
+  let name = localStorage.getItem("name");
+  let pause = localStorage.getItem("pause");
+  let lLength = localStorage.getItem("lLength");
+  let sLength = localStorage.getItem("sLength");
+  document.getElementById("resumePopup").style.visibility = "hidden"
+  document.getElementById("resumePopup").style.opacity = 0
+  document.getElementById("resumePopup").style.pointerEvents = "none"
+  let resumeGame=true
+  hideAll()
+  
+  competition(mode,name,pause, lLength, sLength,resumeGame)
+}
+
+function dismissPopup(){
+  document.getElementById("resumePopup").style.visibility = "hidden"
+  document.getElementById("resumePopup").style.opacity = 0
+  document.getElementById("resumePopup").style.pointerEvents = "none"
+  localStorage.removeItem("UUID");
+  localStorage.removeItem("mode");
+  localStorage.removeItem("name");
+  localStorage.removeItem("pause");
+  localStorage.removeItem("lLength");
+  localStorage.removeItem("sLength");
+}
+
 $(document).ready(function () {
   if(localStorage.hasOwnProperty("UUID")){
     document.getElementById("resumePopup").style.visibility = "visible"
     document.getElementById("resumePopup").style.opacity = 1
     document.getElementById("resumePopup").style.pointerEvents = "auto"
-    //TODO
   }
 });
 
-//flashMorseCode(morse
+

@@ -21,7 +21,7 @@ body {
     padding-right: 0;
     height: 100vh;
     margin: 0;
-    background: url('/static/content/graveyard.jpg') no-repeat center center fixed;
+    background: url('/static/content/testscreen.jpg') no-repeat center center fixed;
     background-size: cover;
     z-index: -1;
 
@@ -126,7 +126,7 @@ morseDiv{
 .scrolling-wrapper, .scrolling-wrapper-flexbox {
     height: 60%;
     width: 100%;
-    -webkit-overflow-scrolling: touch;
+    /*-webkit-overflow-scrolling: touch;*/
     &::-webkit-scrollbar {
         display: none;
     }
@@ -175,29 +175,32 @@ morseDiv{
     background-color: gray;
 }
 
+
+.buttonLeft,
+.buttonRight {
+  touch-action: manipulation;
+}
 .buttonLeft {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
+    position: absolute;
+    top: 50%-16px;
     background-color: transparent;
-    z-index: 1;
+    z-index: 10;
     border: none;
     color: white;
     font-size: 32px;
     cursor: pointer;
-    left: 20px;
+    left: 15px;
 }
 .buttonRight {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
+    position: absolute;
+    top: 50%-16px;
     background-color: transparent;
-    z-index: 1;
+    z-index: 10;
     border: none;
     color: white;
     font-size: 32px;
     cursor: pointer;
-    right: 20px;
+    right: 15px;
 }
 
 .scroll-buttons button.right {
