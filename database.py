@@ -47,7 +47,7 @@ def getFromDatabase(roomID):
 def checkIfRoomExists(roomID):
     with get_database_connection() as con:
         cur = con.cursor()
-        cur.execute("SELECT EXISTS(SELECT 1 FROM scores WHERE roomID = ?)", (roomID,))
+        cur.execute("SELECT EXISTS(SELECT 1 FROM rooms WHERE roomID = ?)", (roomID,))
         exists = cur.fetchone()[0]
         if exists:
             return True
@@ -129,6 +129,17 @@ def destroyEntry(UUID):
         cur.execute("DELETE FROM gamedata WHERE id = ?", (UUID,))
         con.commit()
         return "OK"
+    
+def createRoom(roomName):
+    with get_database_connection() as con:
+        cur = con.cursor()
+        response = cur.execute("SELECT COUNT(*) FROM rooms WHERE roomID = ?", (roomName,)).fetchone()
+        if response[0] > 0:
+            return False
+        cur.execute("INSERT INTO rooms VALUES (?,?)", (datetime.now(),roomName))
+        con.commit()
+        return True
+        
     
 
 if __name__ == "__main__":

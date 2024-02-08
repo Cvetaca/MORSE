@@ -1,9 +1,11 @@
 import sqlite3
-con=sqlite3.connect("/var/www/morse/database.db")
+con=sqlite3.connect("/var/www/morseDEV/database.db")
 cur = con.cursor()
 cur.execute("DROP TABLE IF EXISTS scores")
 con.commit()
 cur.execute("DROP TABLE IF EXISTS gameData")
+con.commit()
+cur.execute("DROP TABLE IF EXISTS rooms")
 con.commit()
 cur.execute("""CREATE TABLE scores (
             rawDate TIMESTAMP NOT NULL,
@@ -12,7 +14,7 @@ cur.execute("""CREATE TABLE scores (
             score int NOT NULL,
             total int NOT NULL,
             time decimal(10,2) NOT NULL,
-            roomID TEXT DEFAULT '0'
+            roomID nvarchar(32) DEFAULT '0'
             )""")
 con.commit()
 
@@ -24,7 +26,13 @@ cur.execute("""CREATE TABLE gameData (
             charIndex int NOT NULL,
             lastCharRequest TIMESTAMP,
             timeIncrement REAL NOT NULL DEFAULT 0,
-            roomID TEXT DEFAULT '0'
+            roomID nvarchar(32) DEFAULT '0'
+            )""")
+con.commit()
+
+cur.execute("""CREATE TABLE rooms (
+            rawDate TIMESTAMP NOT NULL,
+            roomID nvarchar(32) NOT NULL
             )""")
 con.commit()
 

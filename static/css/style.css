@@ -145,7 +145,7 @@ input,select {
 }
 
 .start-button:hover {
-    background-color: #10362B;
+    background-color: rgba(114,142,182,0.8);
 }
 
 

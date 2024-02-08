@@ -79,12 +79,12 @@ def checkSession(response):
         return False
 
 @app.route('/api/checkRoomExists/<roomID>', methods=['GET'])
-@limiter.exempt
+@limiter.limit("200 per day")
 def check_room_exists(roomID):
     if db.checkIfRoomExists(roomID):
-        return jsonify({"exists": True})
+        return jsonify({"exists": True}),200   
     else:
-        return jsonify({"exists": False})
+        return jsonify({"exists": False}),400
 
 
 
@@ -219,6 +219,29 @@ def getResults():
     else:
         return jsonify({"error": "Only POST requests are allowed"}), 405
 
+
+@app.route('/api/createRoom', methods=['POST'])
+@limiter.limit("20 per day")
+def createRoom():
+    if request.is_json:
+        try:
+            json_data = request.get_json()
+            if "roomName" in json_data.keys():
+                if(len(json_data["roomName"])>32):
+                    return jsonify({"error": "Room name too long"}), 400
+                roomID = db.createRoom(json_data["roomName"])
+                if(roomID==False):
+                    return jsonify({"error": "Room exists"}), 400
+                return "", 200
+            else:
+                return jsonify({"error": "No room name provided"}), 400
+        except Exception as e:
+            print(e)
+            return jsonify({"error": "Invalid JSON data"}), 400
+    else:
+        return jsonify({"error": "Invalid content type, JSON expected"}), 400
+    
+    
 
 if __name__ == '__main__':
     #Development

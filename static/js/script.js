@@ -16,6 +16,8 @@ function getMousePosition(e) {
 
 
 
+
+
 async function startButtonGame(){
   if (document.getElementById("ID").value == "") {
     alert("Enter name or ID!")
@@ -35,8 +37,8 @@ async function startButtonGame(){
   mode=checkbox.checked
   hideGameWindow()
   
-  document.body.style.setProperty("cursor", "none")
-  document.body.style.setProperty("caret-color", "transparent")
+  //document.body.style.setProperty("cursor", "none")
+  //document.body.style.setProperty("caret-color", "transparent")
 
   document.removeEventListener("mousemove", getMousePosition);
   document.removeEventListener("touchmove", getMousePosition);
@@ -127,6 +129,23 @@ function changeToEnterWindow(){
 function changeFromCreateToMain(){
   const container3 = document.getElementById("container3");
   const container4 = document.getElementById("container4");
+
+  //container4.style.transition = "opacity 1s";
+  container4.style.opacity = 0;
+  container4.style.visibility = "hidden";
+  container4.style.pointerEvents = "none";
+  
+
+  //container3.style.transition = "opacity 1s";
+  container3.style.visibility = "visible";
+  container3.style.opacity = 1;
+  container3.style.pointerEvents = "auto";
+
+}
+
+function changeFromCreateEndToMain(){
+  const container3 = document.getElementById("container3");
+  const container4 = document.getElementById("container6");
 
   //container4.style.transition = "opacity 1s";
   container4.style.opacity = 0;
@@ -729,6 +748,88 @@ function dismissPopup(){
   localStorage.removeItem("pause");
   localStorage.removeItem("lLength");
   localStorage.removeItem("sLength");
+}
+
+
+async function createRoom(){
+  if(document.getElementById("roomName").value=="" || document.getElementById("roomName").value.length>32){
+    alert("Enter the room name! (max 32 characters)")
+    return
+  }
+
+  const roomName = document.getElementById("roomName").value;
+  const regex = /^[a-zA-Z0-9_]+$/;
+  if (!regex.test(roomName)) {
+    alert("Invalid room name! Only letters, numbers, and '_' are allowed.");
+    document.getElementById("createRoomButton").disabled = false;
+    return;
+  }
+
+
+  document.getElementById("createRoomButton").disabled=true
+
+  let resp = await fetch(`/api/createRoom`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"roomName":document.getElementById("roomName").value})
+  })
+  if(resp["status"]!=200){
+    alert("Room with this name already exists or name too long!")
+    document.getElementById("createRoomButton").disabled=false
+  }
+  else{
+    document.getElementById("container4").style.opacity=0
+    document.getElementById("container4").style.visibility="hidden"
+    document.getElementById("container4").style.pointerEvents="none"
+
+    localStorage.setItem("roomID", document.getElementById("roomName").value);
+    document.getElementById("roomNumber").innerHTML=document.getElementById("roomName").value
+    document.getElementById("roomMode").classList.remove("containerHidden");
+
+    document.getElementById("roomIDSpan").innerHTML=document.getElementById("roomName").value
+    document.getElementById("roomLinkSpan").innerHTML=window.location.href+"room/"+document.getElementById("roomName").value
+    document.getElementById("roomQR").src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data="+window.location.href+"room/"+document.getElementById("roomName").value
+    
+    document.getElementById("container6").style.visibility="visible"
+    document.getElementById("container6").style.opacity=1
+    document.getElementById("container6").style.pointerEvents="auto"
+
+    document.getElementById("createRoomButton").disabled=false
+  }
+}
+
+
+async function joinRoom(){
+  if(document.getElementById("roomID").value=="" || document.getElementById("roomID").value.length>32){
+    alert("Enter the room name!")
+    return
+  }
+
+  
+
+  document.getElementById("enterRoomButton").disabled=true
+  let resp = await fetch(`/api/checkRoomExists/`+document.getElementById("roomID").value, {
+    method: 'GET'
+  })
+  if(resp["status"]!=200){
+    alert("Room with this name does not exist!")
+    document.getElementById("enterRoomButton").disabled=false
+  }
+  else{
+    localStorage.setItem("roomID", document.getElementById("roomID").value);
+    document.getElementById("roomNumber").innerHTML=document.getElementById("roomID").value
+    document.getElementById("roomMode").classList.remove("containerHidden");
+    document.getElementById("roomEnterMessage").innerHTML="Room joined!"
+    await new Promise(r => setTimeout(r, 1000));
+    document.getElementById("enterRoomButton").disabled=false
+    changeFromEnterToMain()
+   
+    document.getElementById("roomEnterMessage").innerHTML=""
+
+  }
+
 }
 
 $(document).ready(function () {

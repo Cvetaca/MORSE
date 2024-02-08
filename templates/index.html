@@ -22,6 +22,7 @@
 </head>
 <body>
     <input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
+    
     <div id="container3" class="container">
         
         <div class="game-box"> 
@@ -42,8 +43,18 @@
             <div class="input-container">
                 <input type="text" id="roomName" placeholder="Enter room name">
             </div>
-            <button class="game-button" onclick="changeToPlayWindow()">Create room</button><br>
-            <span id="roomLink"></p>
+            <button id="createRoomButton" class="game-button" onclick="createRoom()">Create room</button><br>
+            <a id="roomLink"></a>
+        </div>
+    </div>
+    <div id="container6" class="containerHidden">
+        <div class="game-box"> 
+            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromCreateEndToMain()"></i>
+            <h1>Share room with friends!</h1>
+            <p>Room ID: <span id="roomIDSpan"></span></p>
+            <span id="roomLinkSpan"></span><br>
+            <img id="roomQR" style="margin-top:5px"></img>
+                   
         </div>
     </div>
     <div id="container5" class="containerHidden">
@@ -51,11 +62,13 @@
             <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromEnterToMain()"></i>
             <h1>Enter room</h1>
             <div class="input-container">
-                <input type="text" id="roomName" placeholder="Enter room ID">
+                <input type="text" id="roomID" placeholder="Enter room ID">
             </div>
-            <button class="game-button" onclick="changeToPlayWindow()">Enter room</button><br>
+            <button id="enterRoomButton" class="game-button" onclick="joinRoom()">Enter room</button><br>
+            <span id="roomEnterMessage"></span>
         </div>
     </div>
+    
     <div id="container" class="containerHidden" >
         <div class="game-box">
             <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromGameToMain()"></i>
@@ -105,6 +118,10 @@
     <p style="margin-top:0px;margin-bottom:5px;font-size:11px;"><b>Do you want to resume the last game?</b></p>
     <button class="resume-button" onclick="resumeGame()">Resume</button>
     <button class="resume-button" onclick="dismissPopup()">Dismiss</button>
+</div>
+
+<div id="roomMode" class="game-box containerHidden" style="position:fixed;top:1%;padding:5px">
+    <p style="margin-top:2px;margin-bottom:2px;font-size:11px;"><b>Playing in room: <span id="roomNumber"></span></b></p>
 </div>
 
 <!-- Rest of the code -->
