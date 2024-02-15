@@ -15,13 +15,13 @@ body {
     display: flex;
     overflow-y: hidden;
     justify-content: center;
-    font-family: sans-serif;
+    font-family: nasalization-rg;
     align-items: center;
     padding-left: 0;
     padding-right: 0;
     height: 100vh;
     margin: 0;
-    background: url('/static/content/testscreen.jpg') no-repeat center center fixed;
+    background: url('/static/content/back3.jpg') no-repeat center center fixed;
     background-size: cover;
     z-index: -1;
 
@@ -318,6 +318,32 @@ morseDiv{
 
 .popup-button {
     margin-right: 10px;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 3px;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    font-size: 14px;
+    z-index: 1; /* Ensure the footer is above other elements */
+}
+
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        font-size: 11px; /* Reduce font size for small screens */
+    }
+    .footer{
+        font-size: 11px;
+    }
 }
 
 

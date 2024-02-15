@@ -28,7 +28,8 @@
         <div class="game-box"> 
             <h1>Main menu</h1>
             <button class="game-button" onclick="changeToPlayWindow()">Play</button><br>
-            <button class="game-button" onclick="window.location.href = '/scores'">Scores</button><br>
+            <button class="game-button" onclick="changeToSettingsWindow()">Learn morse</button><br>
+            <button class="game-button" onclick="redirectScores()">Scores</button><br>
             <button class="game-button" onclick="changeToCreateWindow()">Create room</button><br>
             <button class="game-button" onclick="changeToEnterWindow()">Enter room</button><br>
             <button class="game-button" id="HTP">How to play</button>
@@ -109,7 +110,7 @@
 
                 </span>
                 
-            <button class="start-button" id="restart" disabled onclick="window.location.reload();">RESTART</button>&nbsp;<button class="start-button" id="scores" disabled onclick='location.href="/scores"'>SCORES</button>
+            <button class="start-button" id="restart" disabled onclick="window.location.reload();">RESTART</button>&nbsp;<button class="start-button" id="scores" disabled onclick='redirectScores()'>SCORES</button>
         </div>
     </div>
 
@@ -120,7 +121,7 @@
     <button class="resume-button" onclick="dismissPopup()">Dismiss</button>
 </div>
 
-<div id="roomMode" class="game-box containerHidden" style="position:fixed;top:1%;padding:5px">
+<div id="roomMode" class="game-box containerHidden">
     <p style="margin-top:2px;margin-bottom:2px;font-size:11px;"><b>Playing in room: <span id="roomNumber"></span></b></p>
 </div>
 

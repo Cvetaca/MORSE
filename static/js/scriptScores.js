@@ -5,10 +5,8 @@ function customComparator(a, b) {
       Hard: 1,
       Easy: 2,
   };
-
   const aPriority = priority[a[2]];
   const bPriority = priority[b[2]];
-
   if (aPriority !== bPriority) {
       return aPriority - bPriority;
   }
@@ -17,10 +15,9 @@ function customComparator(a, b) {
   const bScore = b[3] / b[4] * 100;
 
   if (aScore !== bScore) {
-      return bScore - aScore; // Higher is better
+      return bScore - aScore;
   }
-
-  return a[5] - b[5]; // Lower is better
+  return a[5] - b[5];
 }
 
 async function visualisation(resData) {
@@ -53,21 +50,27 @@ async function visualisation(resData) {
   }
 
 async function showData(){
-    let data = await fetch(`/api/results/0`)
+  let roomID = "0";
+  const url = window.location.href;
+  const urlParts = url.split("/");
+  const lastPart = urlParts[urlParts.length - 1];
+  if (lastPart !== "" && lastPart != 'scores') {
+    roomID = lastPart;
+  }
+  let data = await fetch(`/api/results/`+roomID)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
                 })
-    //console.log(data)
-    //await visualisation(data)
     return data
 }
 
 let dataGlobal = showData()
 
-$(document).ready(async function () {
-    //showData()
-    visualisation(await dataGlobal)
-  });
+
+
+document.addEventListener("DOMContentLoaded", async function () {
+  visualisation(await dataGlobal);
+});

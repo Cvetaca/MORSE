@@ -454,8 +454,12 @@ async function competition(mode,name,pause, lLength, sLength,resumeGame){
 
   let data
   if(!resumeGame){
-    let UUID = await fetch(`/api/game/generateChallenge`,{
-      method:'POST'
+    var roomID='0'
+    if(localStorage.hasOwnProperty("roomID")){
+      roomID=localStorage.getItem("roomID")
+    }
+    let UUID = await fetch(`/api/game/generateChallenge/`+roomID,{
+      method:'GET'
     })
           .then(response => {
           if (!response.ok) {
@@ -513,7 +517,7 @@ async function competition(mode,name,pause, lLength, sLength,resumeGame){
     if(character["END"]==1)break
     await new Promise(r => setTimeout(r, 1000));
     character=character["char"]
-    console.log(character)
+    //console.log(character)
     await flashMorseCode(character,pause, lLength, sLength,mode,true)
     await waitForUserInputComp(data);
     document.getElementById("supportText").innerHTML=""
@@ -813,7 +817,8 @@ async function joinRoom(){
   let resp = await fetch(`/api/checkRoomExists/`+document.getElementById("roomID").value, {
     method: 'GET'
   })
-  if(resp["status"]!=200){
+  var status=await resp.text()
+  if(status==="NOK"){
     alert("Room with this name does not exist!")
     document.getElementById("enterRoomButton").disabled=false
   }
@@ -832,11 +837,52 @@ async function joinRoom(){
 
 }
 
-$(document).ready(function () {
+async function doesRoomExist(roomID){
+  let resp = await fetch(`/api/checkRoomExists/`+roomID, {
+    method: 'GET'
+  })
+  var status=await resp.text()
+  return status === "OK";
+}
+
+async function doesGameExist(UUID){
+  let resp = await fetch(`/api/checkGameSession/`+UUID, {
+    method: 'GET'
+  })
+  var status=await resp.text()
+  return status === "OK";
+}
+
+async function redirectScores(){
+  if(localStorage.hasOwnProperty("roomID") && await doesRoomExist(localStorage.getItem("roomID"))){
+        window.location.href = '/scores'+"/"+localStorage.getItem("roomID");
+        return
+  }
+  window.location.href = '/scores';
+}
+
+$(document).ready(async function () {
   if(localStorage.hasOwnProperty("UUID")){
-    document.getElementById("resumePopup").style.visibility = "visible"
-    document.getElementById("resumePopup").style.opacity = 1
-    document.getElementById("resumePopup").style.pointerEvents = "auto"
+    if(await doesGameExist(localStorage.getItem("UUID"))){
+      document.getElementById("resumePopup").style.visibility = "visible"
+      document.getElementById("resumePopup").style.opacity = 1
+      document.getElementById("resumePopup").style.pointerEvents = "auto"
+    }else{
+      localStorage.removeItem("UUID");
+      localStorage.removeItem("mode");
+      localStorage.removeItem("name");
+      localStorage.removeItem("pause");
+      localStorage.removeItem("lLength");
+      localStorage.removeItem("sLength");
+    }
+  }
+  if(localStorage.hasOwnProperty("roomID")){
+    if(await doesRoomExist(localStorage.getItem("roomID"))){
+      document.getElementById("roomNumber").innerHTML=localStorage.getItem("roomID")
+      document.getElementById("roomMode").classList.remove("containerHidden");
+    }else{
+      localStorage.removeItem("roomID");
+    }
   }
 });
 

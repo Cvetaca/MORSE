@@ -18,7 +18,7 @@ def get_database_connection():
 
 # Insert data into the database
 def insertToDatabase(dataIn):
-    data = (datetime.now(), dataIn['id'], dataIn['mode'], dataIn['score'], dataIn["total"], dataIn["totalTime"],0)
+    data = (datetime.now(), dataIn['id'], dataIn['mode'], dataIn['score'], dataIn["total"], dataIn["totalTime"],dataIn["roomID"])
     with get_database_connection() as con:
         cur = con.cursor()
         cur.execute("INSERT INTO scores VALUES (?,?,?,?,?,?,?)", data)
@@ -63,8 +63,8 @@ def checkUUID(UUID):
             return True
         else:
             return False
-def insertGameStart(sessionID,challenge):
-    data = (datetime.now(), sessionID, challenge, "", 0,None,0.0,0)
+def insertGameStart(sessionID,challenge,roomID):
+    data = (datetime.now(), sessionID, challenge, "", 0,None,0.0,roomID)
     with get_database_connection() as con:
         cur = con.cursor()
         cur.execute("INSERT INTO gameData VALUES (?,?,?,?,?,?,?,?)", data)
@@ -114,13 +114,13 @@ def serveChar(UUID):
 def getResults(UUID):
     with get_database_connection() as con:
         cur = con.cursor()
-        response=cur.execute("SELECT challenge,response,rawDate,timeIncrement FROM gamedata WHERE id = ?", (UUID,)).fetchone()
+        response=cur.execute("SELECT challenge,response,rawDate,timeIncrement,roomID FROM gamedata WHERE id = ?", (UUID,)).fetchone()
         if(response==None):return None
         challenge=str(response[0]).split(",")
         getChar=str(response[1]).split(",")
         rawDate=response[2]
         timeIncrement=response[3]
-        return (challenge,getChar,rawDate,timeIncrement)
+        return (challenge,getChar,rawDate,timeIncrement,response[4])
     
 def destroyEntry(UUID):
     #DELETE FROM your_table_name WHERE id = ?

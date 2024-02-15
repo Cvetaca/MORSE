@@ -71,20 +71,15 @@ def serve_dev():
 
 
 
-@app.route('/api/checkGameSession', methods=['GET'])
-def checkSession(response):
-    if "UUID" in response.keys():
-        return db.checkUUID(response["UUID"])
-    else:
-        return False
+@app.route('/api/checkGameSession/<UUID>', methods=['GET'])
+@limiter.limit("200 per day")
+def checkSession(UUID):
+    return "OK" if db.checkUUID(UUID) else "NOK"
 
 @app.route('/api/checkRoomExists/<roomID>', methods=['GET'])
 @limiter.limit("200 per day")
 def check_room_exists(roomID):
-    if db.checkIfRoomExists(roomID):
-        return jsonify({"exists": True}),200   
-    else:
-        return jsonify({"exists": False}),400
+    return "OK" if db.checkIfRoomExists(roomID) else "NOK"
 
 
 
@@ -92,6 +87,8 @@ def check_room_exists(roomID):
 @app.route('/scores/<roomID>')
 @limiter.exempt
 def scores(roomID):
+    if roomID=='0':
+        return render_template('scores.html')
     if db.checkIfRoomExists(roomID):
         return render_template('scores.html')
     return render_template('404room.html'), 404
@@ -110,20 +107,20 @@ def get_general_config(roomID):
         out=db.getFromDatabase(roomID)
         return jsonify(out)
     
-@app.route('/api/game/generateChallenge', methods=['POST'])
+@app.route('/api/game/generateChallenge/<roomID>', methods=['GET'])
 @limiter.limit("200 per day")
-def generateChallenge():
-    if request.method == 'POST':
+def generateChallenge(roomID):
+    if request.method == 'GET':
                 try:
                     challenge=gameMorse.generateChallenge(ENV_compLength)
                     sessionID=gameMorse.generateUUID()
-                    db.insertGameStart(sessionID,challenge)
+                    db.insertGameStart(sessionID,challenge,roomID)
                     return jsonify({"UUID":sessionID})
                 except Exception as e:
                     print(e)
-                    return jsonify({"error": "Invalid JSON data"}), 400
+                    return jsonify({"error": "Error in game creation"}), 400
     else:
-        return jsonify({"error": "Only POST requests are allowed"}), 405
+        return jsonify({"error": "Only GET requests are allowed"}), 405
 
 @app.route('/api/game/getChar', methods=['POST'])
 @limiter.exempt
@@ -190,6 +187,8 @@ def getResults():
                                 score=gameMorse.calculateResult(result[0],result[1])
                                 if(score==-1):return jsonify({"error": "Game not finished yet"}), 400
                                 mode=""
+                                if isinstance(json_data["mode"], str):
+                                    json_data["mode"] = int(json_data["mode"])
                                 if(json_data["mode"]==0):
                                     mode="Easy"
                                 elif(json_data["mode"]==1):
@@ -201,7 +200,8 @@ def getResults():
                                     "mode":mode,
                                     "score":score,
                                     "total":ENV_compLength,
-                                    "totalTime":result[3]
+                                    "totalTime":result[3],
+                                    "roomID":result[4]
                                 }
                                 db.insertToDatabase(data)
                                 db.destroyEntry(json_data["UUID"])
