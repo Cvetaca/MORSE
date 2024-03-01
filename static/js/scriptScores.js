@@ -72,5 +72,17 @@ let dataGlobal = showData()
 
 
 document.addEventListener("DOMContentLoaded", async function () {
+  let roomID = "0";
+  const url = window.location.href;
+  const urlParts = url.split("/");
+  const lastPart = urlParts[urlParts.length - 1];
+  if (lastPart !== "" && lastPart != 'scores') {
+    roomID = lastPart;
+  }
+  if (roomID!="0"){
+    document.getElementById("roomNumber").innerHTML=roomID
+    document.getElementById("roomMode").style.visibility="visible"
+    document.getElementById("roomMode").style.opacity=1
+  }
   visualisation(await dataGlobal);
 });

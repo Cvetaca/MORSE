@@ -52,7 +52,7 @@ morseDiv{
 }
 
 
-.scrolling-wrapper {
+.scrolling-wrapper {  
     overflow-x: hidden;
     overflow-y: hidden;
     white-space: nowrap;
@@ -124,7 +124,6 @@ morseDiv{
 
 
 .scrolling-wrapper, .scrolling-wrapper-flexbox {
-    height: 60%;
     width: 100%;
     /*-webkit-overflow-scrolling: touch;*/
     &::-webkit-scrollbar {
@@ -282,7 +281,6 @@ morseDiv{
 /* Media query for mobile phones */
 @media only screen and (max-width: 1000px) {
     .scrolling-wrapper, .scrolling-wrapper-flexbox {
-        height: 65%;
         width: 100%;
         -webkit-overflow-scrolling: touch;
         &::-webkit-scrollbar {
@@ -291,7 +289,6 @@ morseDiv{
     }
     .card {
         width: 60%;
-        height: auto;
     }
     .cardDEAD {
         width: 60%;

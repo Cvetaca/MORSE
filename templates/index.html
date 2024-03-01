@@ -4,27 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Morse challenge</title>
-    
+    <!-- <a href="https://www.flaticon.com/free-icons/home" title="home icons">Home icons created by Dave Gandy - Flaticon</a> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/css/style.css">
     <img src="/static/content/logoNoBackground.png" alt="Logo" class="logo">
     <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
     <link rel="manifest" href="/static/favicon/site.webmanifest">
     <link rel="mask-icon" href="/static/favicon/safari-pinned-tab.svg" color="#ff4444">
     <meta name="apple-mobile-web-app-title" content="Morse Challenge">
     <meta name="application-name" content="Morse Challenge">
     <meta name="msapplication-TileColor" content="#ff4444">
     <meta name="theme-color" content="#ff4444">
+
     
 </head>
 <body>
     <input type="text" id="hiddenInput" style="position: absolute; top: -1000px; left: -1000px;">
     
     <div id="container3" class="container">
-        
         <div class="game-box"> 
             <h1>Main menu</h1>
             <button class="game-button" onclick="changeToPlayWindow()">Play</button><br>
@@ -32,14 +32,15 @@
             <button class="game-button" onclick="redirectScores()">Scores</button><br>
             <button class="game-button" onclick="changeToCreateWindow()">Create room</button><br>
             <button class="game-button" onclick="changeToEnterWindow()">Enter room</button><br>
-            <button class="game-button" id="HTP">How to play</button>
+            <button class="game-button" id="HTP" onclick="LeaveRoom()">Leave Room</button>
         </div>
     </div>
 
     
     <div id="container4" class="containerHidden">
         <div class="game-box"> 
-            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromCreateToMain()"></i>
+            <img src="/static/content/home.png" style="position: absolute; top: 10px; left: 10px; cursor: pointer; filter:invert(1);height:15px" onclick="changeFromCreateToMain()">
+            
             <h1>Create room</h1>
             <div class="input-container">
                 <input type="text" id="roomName" placeholder="Enter room name">
@@ -50,7 +51,7 @@
     </div>
     <div id="container6" class="containerHidden">
         <div class="game-box"> 
-            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromCreateEndToMain()"></i>
+            <img src="/static/content/home.png" style="position: absolute; top: 10px; left: 10px; cursor: pointer; filter:invert(1);height:15px" onclick="changeFromCreateEndToMain()">
             <h1>Share room with friends!</h1>
             <p>Room ID: <span id="roomIDSpan"></span></p>
             <span id="roomLinkSpan"></span><br>
@@ -60,7 +61,7 @@
     </div>
     <div id="container5" class="containerHidden">
         <div class="game-box"> 
-            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromEnterToMain()"></i>
+            <img src="/static/content/home.png" style="position: absolute; top: 10px; left: 10px; cursor: pointer; filter:invert(1);height:15px" onclick="changeFromEnterToMain()">
             <h1>Enter room</h1>
             <div class="input-container">
                 <input type="text" id="roomID" placeholder="Enter room ID">
@@ -72,7 +73,7 @@
     
     <div id="container" class="containerHidden" >
         <div class="game-box">
-            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="changeFromGameToMain()"></i>
+            <img src="/static/content/home.png" style="position: absolute; top: 10px; left: 10px; cursor: pointer; filter:invert(1);height:15px" onclick="changeFromGameToMain()">
             <h1>Game</h1>
             <div class="input-container">
                 <input type="text" id="ID" placeholder="Enter ID or name">
@@ -102,7 +103,7 @@
     </div>
     <div id="container2" class="containerHidden">
         <div class="game-box">
-            <i class="fa fa-home" style="position: absolute; top: 10px; left: 10px; cursor: pointer; color:white" onclick="location.reload();"></i>
+            <img src="/static/content/home.png" style="position: absolute; top: 10px; left: 10px; cursor: pointer; filter:invert(1);height:15px" onclick="location.reload();">
             <h1>Score</h1>
                 <p>Correct answers: <span id="score"></span></p>
                 <p>Time: <span id="time"></span>s</p>
@@ -129,8 +130,11 @@
     <h1 id="supportText"></h1>
     <div id="flashlight"></div>
     <div id="flashlightCircle"></div>
-    <div style="width: 25px;text-align: left;position: absolute; top: 10px; right: 10px; cursor: pointer; color:white; font-size:32px;" id="mute">
-        <i id="upDown" class="fa fa-volume-up" onclick="audioOnOff()"></i>
+    <div style="width: 25px;text-align: left;position: absolute;top:1px; right: 10px; cursor: pointer; color:white; font-size:32px;" id="mute">
+        
+        <img src="/static/content/information.png" style="filter:invert(1); height:25px">
+        <img id="mute_image" src="/static/content/speaker-loud.png" style="filter:invert(1); height:25px" onclick="audioOnOff()">
+        
     </div>
     
     <footer class="footer">

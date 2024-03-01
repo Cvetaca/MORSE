@@ -632,8 +632,7 @@ function audioOnOff(){
       FREQUENCY=0;
     }
     
-    document.getElementById("upDown").classList.remove("fa-volume-up");
-    document.getElementById("upDown").classList.add("fa-volume-off");
+    document.getElementById("mute_image").src="/static/content/speaker-mute.png"
     mute=true;
   }else{
     try{
@@ -641,12 +640,20 @@ function audioOnOff(){
     }catch(e){
       FREQUENCY=440;
     }
-    document.getElementById("upDown").classList.remove("fa-volume-off");
-    document.getElementById("upDown").classList.add("fa-volume-up");
+    document.getElementById("mute_image").src="/static/content/speaker-loud.png"
     
     mute=false;
   }
   
+}
+
+
+function LeaveRoom(){
+  if(!localStorage.hasOwnProperty("roomID")){
+    alert("You are not in a room!")
+  }
+  document.getElementById("roomMode").classList.add("containerHidden");
+  localStorage.removeItem("roomID");
 }
 
 

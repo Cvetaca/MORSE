@@ -28,7 +28,8 @@ limiter = Limiter(
 
 
 def serve(port):
-    http_server = WSGIServer(('0.0.0.0', port), app,log=None)
+    #http_server = WSGIServer(('0.0.0.0', port), app,log=None)
+    http_server = WSGIServer(('0.0.0.0', port), app)
     http_server.serve_forever()
 
 
@@ -245,7 +246,7 @@ def createRoom():
 
 if __name__ == '__main__':
     #Development
-    app.run(debug=True,port=6446)
+    #app.run(debug=True,port=6446)
     #print(checkSession({"UUID":"1234"}))
-    #serve(6446)
+    serve(6446)
     
