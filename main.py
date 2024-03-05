@@ -4,7 +4,6 @@ import json
 from datetime import datetime
 import database as db
 from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 
 import gameMorse
 from flask import render_template
@@ -59,7 +58,7 @@ def serve_root():
     return render_template('index.html')
 
 
-@app.route('/dev')
+@app.route('/game')
 @limiter.exempt
 def serve_dev():
     return render_template('game.html')
@@ -82,6 +81,19 @@ def checkSession(UUID):
 def check_room_exists(roomID):
     return "OK" if db.checkIfRoomExists(roomID) else "NOK"
 
+
+@app.route('/room/<roomID>')
+@limiter.exempt
+def join_room(roomID):
+        if db.checkIfRoomExists(roomID):
+            return f'''
+            <script>
+                localStorage.setItem('roomID', '{roomID}');
+                window.location.href = '/';
+            </script>
+            '''
+        else:
+            return render_template('404room.html'), 404
 
 
 @app.route('/scores', defaults={'roomID': '0'})
@@ -246,7 +258,6 @@ def createRoom():
 
 if __name__ == '__main__':
     #Development
-    #app.run(debug=True,port=6446)
+    app.run(debug=True,port=6447)
     #print(checkSession({"UUID":"1234"}))
-    serve(6446)
-    
+    #serve(6446)

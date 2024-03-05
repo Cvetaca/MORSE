@@ -224,13 +224,12 @@ function createRoom(){
 
 
 
-function generateChallenge(challengelength) {
+async function generateChallenge(challengelength) {
   const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
   challenge = [];
 
   for (let i = 0; i < challengelength; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    const randomCharacter = characters.charAt(randomIndex);
+    const randomCharacter = rando(characters);
     challenge.push(randomCharacter.toUpperCase());
   }
 

@@ -11,7 +11,7 @@ body {
     height: 100vh;
     background-color: #000;
     margin: 0;
-    background: url('/static/content/testscreen.jpg') no-repeat center center fixed;
+    background: url('/static/content/back3.jpg') no-repeat center center fixed;
     background-size: cover;
     z-index: -1;
     caret-color: transparent;

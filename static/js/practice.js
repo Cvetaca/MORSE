@@ -1,4 +1,46 @@
+let FREQUENCY = 440;
 
+let note_context;
+let note_node;
+let gain_node;
+let audioContextInitialized = false;
+
+function initializeAudioContext() {
+  note_context = new AudioContext();
+  note_node = note_context.createOscillator();
+  gain_node = note_context.createGain();
+  note_node.frequency.value = FREQUENCY.toFixed(2);
+  gain_node.gain.value = 0;
+  note_node.connect(gain_node);
+  gain_node.connect(note_context.destination);
+  note_node.start();
+  audioContextInitialized = true;
+}
+
+let mute=false;
+
+function audioOnOff(){
+  if(!mute){
+    try{
+      note_node.frequency.value=0;
+    }catch(e){
+      FREQUENCY=0;
+    }
+    
+    document.getElementById("mute_image").src="/static/content/speaker-mute.png"
+    mute=true;
+  }else{
+    try{
+      note_node.frequency.value=FREQUENCY.toFixed(2);
+    }catch(e){
+      FREQUENCY=440;
+    }
+    document.getElementById("mute_image").src="/static/content/speaker-loud.png"
+    
+    mute=false;
+  }
+  
+}
 
 
 async function charToMorseArray(char) {
@@ -23,7 +65,8 @@ async function charToMorseArray(char) {
     }
   }
 
-  async function flashMorseCode(code, pause, lLength, sLength) {
+  async function flashMorseCode(code, pause, lLength, sLength,competitionMode) {
+  
     let currentIndex = 0;
     const flashlight = document.getElementById('flashlight');
   
@@ -31,18 +74,25 @@ async function charToMorseArray(char) {
       return new Promise((resolve) => {
         if (currentIndex < code.length) {
           if (code[currentIndex] === 1) {
-            flashlight.style.boxShadow = '0 0 5px 20px rgba(196, 180, 84, 0.8)'; // Long flash
-            flashlight.style.backgroundColor = 'rgb(196, 180, 84)';
+            //flashlight.style.boxShadow = '0 0 5px 20px rgba(114,142,182,0.8)'; // Long flash
+            //flashlight.style.background='radial-gradient(circle at 50% 50%, #fff 0%,  #aaa 20%, #555 50%,  transparent 80%);'
+            flashlight.style.opacity = 1;
+            if(competitionMode===false){
+              document.getElementById("supportText").innerHTML += "&ndash;&nbsp;"
+            }
+            
             const startTime = performance.now();
-  
+            gain_node.gain.setTargetAtTime(0.1, 0, 0.001)
             function animate() {
               const currentTime = performance.now();
               const elapsedTime = currentTime - startTime;
               if (elapsedTime < lLength) {
                 requestAnimationFrame(animate); // Continue animation
               } else {
-                flashlight.style.boxShadow = 'none'; // Turn off the flashlight
-                flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                flashlight.style.opacity = 0;
+                //flashlight.style.boxShadow = 'none'; // Turn off the flashlight
+                //flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                gain_node.gain.setTargetAtTime(0, 0, 0.001)
                 currentIndex++;
                 setTimeout(() => {
                   flash().then(resolve); // Pause between long flashes (adjust as needed)
@@ -52,18 +102,26 @@ async function charToMorseArray(char) {
   
             requestAnimationFrame(animate);
           } else {
-            flashlight.style.boxShadow = '0 0 5px 20px rgba(196, 180, 84, 0.8)'; // Short flash
-            flashlight.style.backgroundColor = 'rgb(196, 180, 84)';
+            //flashlight.style.boxShadow = '0 0 5px 20px rgba(114,142,182,0.8)'; // Short flash
+            ///flashlight.style.backgroundColor = 'rgba(114,142,182,0.95)';
+            flashlight.style.opacity = 1;
+            if(competitionMode===false){
+              document.getElementById("supportText").innerHTML += "&centerdot;&nbsp;"
+            }
             const startTime = performance.now();
-  
+            gain_node.gain.setTargetAtTime(0.1, 0, 0.001)
+            //playBeep(sLength / 100);
             function animate() {
               const currentTime = performance.now();
               const elapsedTime = currentTime - startTime;
               if (elapsedTime < sLength) {
                 requestAnimationFrame(animate); // Continue animation
               } else {
-                flashlight.style.boxShadow = 'none'; // Turn off the flashlight
-                flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                //flashlight.style.boxShadow = 'none'; // Turn off the flashlight
+                //flashlight.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                flashlight.style.opacity = 0;
+                
+                gain_node.gain.setTargetAtTime(0, 0, 0.001)
                 currentIndex++;
                 setTimeout(() => {
                   flash().then(resolve); // Pause between short flashes (adjust as needed)
@@ -105,9 +163,8 @@ async function calculateAnswer(array1, array2) {
     challenge = [];
   
     for (let i = 0; i < challengelength; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      const randomCharacter = characters[randomIndex];
-      challenge.push(randomCharacter.toUpperCase());
+      const randomCharacter = rando(characters);
+      challenge.push(randomCharacter.value.toUpperCase());
     }
   
     return challenge
@@ -173,7 +230,7 @@ async function startGame(level,challengelength,levelSelect) {
         sLength = 110
         break;
   
-      default:
+      case "2":
         intLevel=2
         mode="Champion"
         pause = 80
@@ -182,6 +239,7 @@ async function startGame(level,challengelength,levelSelect) {
         break;
     }
     let challenge = await generateChallenge(challengelength,practiceLevelSelector[levelSelect])
+    initializeAudioContext()
     await new Promise(r => setTimeout(r, 3000));
     let userInput = []
     let startTime = Date.now()
@@ -199,6 +257,8 @@ async function startGame(level,challengelength,levelSelect) {
         const handleInput = (event) => {
           userInput.push(event.target.value.toUpperCase());
           inputField.removeEventListener('input', handleInput);
+          inputField.removeEventListener('blur', handleFocus);
+          inputField.removeEventListener('touchstart', handleFocus);
           document.body.removeChild(inputField);
           resolve();
         };
@@ -209,6 +269,7 @@ async function startGame(level,challengelength,levelSelect) {
   
         inputField.addEventListener('input', handleInput);
         inputField.addEventListener('blur', handleFocus);
+        inputField.addEventListener('touchstart', handleFocus);
         inputField.focus();
       });
     }
@@ -216,9 +277,10 @@ async function startGame(level,challengelength,levelSelect) {
     for (const element of challenge) {
       await new Promise(r => setTimeout(r, 1000));
       let char = await charToMorseArray(element);
-      await flashMorseCode(char, pause, lLength, sLength);
+      await flashMorseCode(char, pause, lLength, sLength,false);
       //console.log(char);
       await waitForUserInput();
+      document.getElementById("supportText").innerHTML=""
       //console.log(userInput); // Log user input for each element
   
     }
@@ -262,3 +324,85 @@ async function startGame(level,challengelength,levelSelect) {
     }
     }
   }
+const template={
+  "L1": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L2": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L3": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L4": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L5": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L6": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L7": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L8": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L9": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L10": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L11": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L12": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L13": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L14": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  },
+  "L15": {
+      "enable": false,
+      "score": 0,
+      "time": 0.00
+  }
+}
+  document.addEventListener("DOMContentLoaded", async function () {
+    if (!localStorage.getItem("progress")) {
+      localStorage.setItem("progress", JSON.stringify(template));
+    }
+  });

@@ -219,20 +219,26 @@ morseDiv{
   }
 
 
-#flashlight {
+  #flashlight {
     visibility: hidden;
-    position:absolute;
-    width: 20px;
-    height: 20px;
-    background-color: rgba(0, 0, 0,0); /* Flashlight color */
+    position:fixed;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 50% 50%, 
+        rgba(249,243,177,0.9) 0%, /* Strong yellow center */
+        rgba(242,235,164,0.7) 20%, /* Fading yellow outwards */
+        rgba(235,228,151,0.6) 50%, /* More faded yellow */ 
+        50%,  transparent 80%);
+    /*filter: brightness(120%);  Adjust the brightness value as needed */
+    opacity: 0;
+    /*background-color: rgba(0, 0, 0,0);  Flashlight color */
     border-radius: 50%;
-    opacity: 0.8; /* Adjust the opacity to control the intensity */
-    top: 50%;
-    right: 50%;
-    /*transition: opacity 0.5s ease;*/
+    /*opacity: 0.8; Adjust the opacity to control the intensity */
+    top: 49%;
+    right: 50%+20px;
+    transition: opacity 0.1s ease;
     /*transform: translate(300%, 300%);*/
 }
-
 .container {
     text-align: center;
     visibility: visible;
@@ -343,4 +349,14 @@ morseDiv{
     }
 }
 
+h1 {
+    font-size: 24px;
+    margin: 0 0 20px;
+}
 
+#supportText{
+    position: fixed;
+    bottom:30%;
+    font-size:64px;
+    color:white;
+}

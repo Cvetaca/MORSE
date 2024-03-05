@@ -11,6 +11,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/static/favicon/favicon.ico">
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
     <link rel="manifest" href="/static/favicon/site.webmanifest">
     <link rel="mask-icon" href="/static/favicon/safari-pinned-tab.svg" color="#ff4444">
@@ -28,7 +29,7 @@
         <div class="game-box"> 
             <h1>Main menu</h1>
             <button class="game-button" onclick="changeToPlayWindow()">Play</button><br>
-            <button class="game-button" onclick="changeToSettingsWindow()">Learn morse</button><br>
+            <button class="game-button" onclick="window.location.href = '/game';">Learn morse</button><br>
             <button class="game-button" onclick="redirectScores()">Scores</button><br>
             <button class="game-button" onclick="changeToCreateWindow()">Create room</button><br>
             <button class="game-button" onclick="changeToEnterWindow()">Enter room</button><br>
@@ -136,11 +137,12 @@
         <img id="mute_image" src="/static/content/speaker-loud.png" style="filter:invert(1); height:25px" onclick="audioOnOff()">
         
     </div>
-    
     <footer class="footer">
         Developed by <a href="https://valentincic.eu" target="_blank">Tjaž</a>
     </footer>
     <script src="/static/js/script.js">
+        
     </script>
+    <script src="/static/js/rando.js"></script>
 </body>
 </html>
