@@ -4,11 +4,12 @@ import json
 from datetime import datetime
 import database as db
 from flask_limiter import Limiter
+import argparse
 
 import gameMorse
 from flask import render_template
 
-ENV_compLength=3
+ENV_compLength=30
 
 def getIp():
     return request.headers.get('cf-connecting-ip')
@@ -257,7 +258,16 @@ def createRoom():
     
 
 if __name__ == '__main__':
-    #Development
-    app.run(debug=True,port=6447)
-    #print(checkSession({"UUID":"1234"}))
-    #serve(6446)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', action='store_true', help='Activate development mode')
+    parser.add_argument('-p', action='store_true', help='Activate production mode')
+    args = parser.parse_args()
+
+    if args.d:
+        app.run(debug=True, port=6447)
+    elif args.p:
+        serve(6447)
+    else:
+        print('Please specify either -d or -p flag.')
+
+
