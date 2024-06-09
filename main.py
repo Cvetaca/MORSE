@@ -264,9 +264,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.d:
-        app.run(debug=True, port=6447)
+        app.run(debug=True, port=5432)
     elif args.p:
-        serve(6447)
+        serve(5432)
     else:
         print('Please specify either -d or -p flag.')
 
