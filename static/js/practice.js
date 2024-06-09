@@ -197,6 +197,8 @@ async function startGame(level,challengelength,levelSelect) {
     document.getElementById("swrapper").style.opacity = 0
     document.getElementById("swrapper").style.visibility = "hidden"
     document.getElementById("flashlight").style.visibility = "visible"
+    document.getElementById("scrollLeftButton").style.visibility = "hidden"
+    document.getElementById("scrollRightButton").style.visibility = "hidden"
     var timer = setInterval(function () {
   
       $('#countdown').remove();
@@ -289,7 +291,6 @@ async function startGame(level,challengelength,levelSelect) {
     document.getElementById("container2").style.opacity = 1
     document.getElementById("container2").style.pointerEvents = "auto"
     document.getElementById("restart").disabled = false
-    document.getElementById("scores").disabled = false
     document.body.style.setProperty("cursor", "initial")
       document.body.style.setProperty("caret-color", "white")
     let score = await calculateAnswer(challenge, userInput)
@@ -299,7 +300,15 @@ async function startGame(level,challengelength,levelSelect) {
     let buff1,buff2
     buff1=""
     buff2=""
-  
+    var progress=JSON.parse(localStorage.getItem("progress"))
+    if (progress[`L${levelSelect+1}`].score<=score){
+      progress[`L${levelSelect+1}`].score=score
+      progress[`L${levelSelect+1}`].time=time
+    }
+    if(score===challengelength && time<60){
+      progress[`L${levelSelect+2}`].enable=true
+    }
+    localStorage.setItem("progress", JSON.stringify(progress));
     if((score/challengelength)!==1){
     document.getElementById("difference").innerHTML=`
     <p>Expected input:</p>
@@ -326,7 +335,7 @@ async function startGame(level,challengelength,levelSelect) {
   }
 const template={
   "L1": {
-      "enable": false,
+      "enable": true,
       "score": 0,
       "time": 0.00
   },
@@ -404,5 +413,70 @@ const template={
   document.addEventListener("DOMContentLoaded", async function () {
     if (!localStorage.getItem("progress")) {
       localStorage.setItem("progress", JSON.stringify(template));
+      const card = cards[0];
+      card.scrollIntoView({ behavior: 'smooth', inline: 'center' ,block: 'center'});
+      console.log("Progress initialized")
+    }else{
+      var progress=JSON.parse(localStorage.getItem("progress"))
+      var lastEnabledLevel = Object.keys(progress).findLastIndex(key => progress[key].enable === true);
+      if (lastEnabledLevel === -1) {
+        lastEnabledLevel = 0;
+      }
+      transferDataFromJsonToWindow(progress)
+      scrollToCard(lastEnabledLevel+1)
+      console.log("Progress loaded")
     }
   });
+
+  /*var start = null;
+  window.addEventListener("touchstart",function(event){
+    if(event.touches.length === 1){
+       //just one finger touched
+       start = event.touches.item(0).clientX;
+     }else{
+       //a second finger hit the screen, abort the touch
+       start = null;
+     }
+   });
+   window.addEventListener("touchend",function(event){
+    var offset = 100;//at least 100px are a swipe
+    if(start){
+      //the only finger that hit the screen left it
+      var end = event.changedTouches.item(0).clientX;
+
+      if(end > start + offset){
+        scrollToLeft()
+      }
+      if(end < start - offset ){
+       scrollToRight()
+      }
+    }
+  });*/
+
+  function transferDataFromJsonToWindow(jsonData) {
+    const levels = Object.keys(jsonData);
+    
+    levels.forEach(level => {
+      const levelId = level.slice(1);
+      const scoreId = `L${levelId}`;
+      const timeId = `L${levelId}T`;
+      const picture1 = `P${levelId}`;
+      const picture2 = `P${levelId}T`;
+      if (jsonData[level].enable) {
+        const scoreElement = document.getElementById(scoreId);
+        const timeElement = document.getElementById(timeId);
+        const card = document.getElementById(`lvl${levelId}`);
+        const pictureElement1 = document.getElementById(picture1);
+        const pictureElement2 = document.getElementById(picture2);
+        if (jsonData[level].score===20) pictureElement1.src = "/static/content/check.png";
+        if (jsonData[level].time<60 && jsonData[level].time != 0.00) pictureElement2.src = "/static/content/check.png";
+        
+        scoreElement.textContent = jsonData[level].score;
+        timeElement.textContent = jsonData[level].time.toFixed(2);
+        
+        
+       card.classList.remove('disabledCard');
+      }
+      return
+    });
+  }
