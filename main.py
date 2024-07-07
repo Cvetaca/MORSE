@@ -28,8 +28,8 @@ limiter = Limiter(
 
 
 def serve(port):
-    #http_server = WSGIServer(('0.0.0.0', port), app,log=None)
-    http_server = WSGIServer(('0.0.0.0', port), app)
+    http_server = WSGIServer(('0.0.0.0', port), app,log=None)
+    #http_server = WSGIServer(('0.0.0.0', port), app)
     http_server.serve_forever()
 
 
@@ -118,6 +118,7 @@ def get_general_config(roomID):
         #db.insertToDatabase(req)
         return jsonify({"error":"POST TO DATABASE NOT ALLOWED"}),405
     else:
+        print(roomID)
         out=db.getFromDatabase(roomID)
         return jsonify(out)
     
